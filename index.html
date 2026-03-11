@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>VidFlow - Vídeos Curtos</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#000;--bg2:#0a0a0a;--bg3:#111;--bg4:#1a1a1a;--bg5:#222;
+  --text:#fff;--text2:#aaa;--text3:#666;
+  --accent:#fe2c55;--accent2:#25f4ee;--accent3:#5b5bf7;
+  --green:#00c853;--orange:#ff6d00;--red:#ff1744;
+  --radius:12px;--radius2:20px;--radius3:50px;
+  --shadow:0 4px 20px rgba(0,0,0,.5);
+  --transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);}
+::-webkit-scrollbar{width:0;height:0;}
+input,textarea,button,select{font-family:inherit;outline:none;border:none;}
+button{cursor:pointer;background:none;}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s;}
+#splash.hide{opacity:0;pointer-events:none;}
+#splash .logo{font-size:3rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:pulse 1.5s infinite;}
+#splash .loader{width:40px;height:40px;border:3px solid var(--bg4);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-top:20px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* AUTH */
+#auth{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+#auth.show{display:flex;}
+.auth-box{width:100%;max-width:400px;padding:30px;background:var(--bg3);border-radius:var(--radius2);box-shadow:var(--shadow);}
+.auth-box h1{text-align:center;margin-bottom:5px;font-size:2rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.auth-box p.sub{text-align:center;color:var(--text2);margin-bottom:25px;font-size:.9rem;}
+.auth-tabs{display:flex;margin-bottom:20px;background:var(--bg4);border-radius:var(--radius);overflow:hidden;}
+.auth-tab{flex:1;padding:10px;text-align:center;font-weight:600;color:var(--text2);transition:var(--transition);font-size:.9rem;}
+.auth-tab.active{background:var(--accent);color:#fff;}
+.form-group{margin-bottom:15px;}
+.form-group label{display:block;margin-bottom:5px;font-size:.85rem;color:var(--text2);}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 15px;background:var(--bg4);border:1px solid var(--bg5);border-radius:var(--radius);color:var(--text);font-size:.95rem;transition:var(--transition);}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(254,44,85,.15);}
+.btn{padding:12px 24px;border-radius:var(--radius);font-weight:700;font-size:.95rem;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center;gap:8px;}
+.btn-primary{background:var(--accent);color:#fff;width:100%;}
+.btn-primary:hover{background:#e0264c;transform:translateY(-1px);}
+.btn-outline{border:1.5px solid var(--accent);color:var(--accent);}
+.btn-outline:hover{background:var(--accent);color:#fff;}
+.btn-sm{padding:8px 16px;font-size:.8rem;}
+.btn-success{background:var(--green);color:#fff;}
+.btn-danger{background:var(--red);color:#fff;}
+.auth-error{color:var(--red);font-size:.8rem;margin-top:5px;display:none;}
+
+/* MAIN APP */
+#app{position:fixed;inset:0;display:none;flex-direction:column;overflow:hidden;}
+#app.show{display:flex;}
+
+/* PAGES */
+.page{position:absolute;inset:0;bottom:60px;display:none;flex-direction:column;overflow:hidden;}
+.page.active{display:flex;}
+
+/* BOTTOM NAV */
+#bottomNav{position:fixed;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,rgba(0,0,0,.95),rgba(0,0,0,.8));backdrop-filter:blur(20px);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text3);transition:var(--transition);position:relative;font-size:.65rem;}
+.nav-item.active{color:#fff;}
+.nav-item i{font-size:1.3rem;}
+.nav-item.upload-btn i{font-size:1.8rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-badge{position:absolute;top:5px;right:50%;transform:translateX(15px);background:var(--accent);color:#fff;font-size:.6rem;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+/* FEED */
+#feedPage{overflow:hidden;}
+.feed-container{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;}
+.feed-item{height:calc(100vh - 60px);scroll-snap-align:start;position:relative;overflow:hidden;}
+.feed-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.feed-bg video{width:100%;height:100%;object-fit:cover;}
+.feed-bg .demo-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden;}
+.demo-bg::before{content:'';position:absolute;inset:-50%;background:inherit;filter:blur(0);animation:demoBgAnim 8s ease-in-out infinite alternate;}
+@keyframes demoBgAnim{0%{transform:scale(1) rotate(0deg)}100%{transform:scale(1.2) rotate(5deg)}}
+.demo-bg .particles{position:absolute;inset:0;}
+.demo-bg .particle{position:absolute;border-radius:50%;background:rgba(255,255,255,.08);animation:float 6s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.1)}}
+.feed-overlay{position:absolute;inset:0;background:linear-gradient(transparent 60%,rgba(0,0,0,.7));}
+.feed-info{position:absolute;bottom:20px;left:15px;right:80px;z-index:2;}
+.feed-info .username{font-weight:700;font-size:1rem;margin-bottom:5px;display:flex;align-items:center;gap:8px;}
+.feed-info .username .follow-btn-inline{font-size:.7rem;padding:3px 10px;border:1px solid #fff;border-radius:var(--radius);color:#fff;background:transparent;font-weight:600;}
+.feed-info .username .follow-btn-inline.following{background:var(--bg4);border-color:var(--bg4);}
+.feed-info .description{font-size:.85rem;color:rgba(255,255,255,.9);margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.feed-info .hashtags{display:flex;flex-wrap:wrap;gap:5px;}
+.feed-info .hashtags span{font-size:.8rem;color:var(--accent2);font-weight:600;}
+.feed-actions{position:absolute;bottom:20px;right:10px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:2;}
+.feed-action{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.feed-action button{width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;transition:var(--transition);background:rgba(255,255,255,.1);backdrop-filter:blur(5px);}
+.feed-action button:active{transform:scale(.9);}
+.feed-action button.liked{color:var(--accent);animation:likeAnim .4s ease;}
+@keyframes likeAnim{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+.feed-action span{font-size:.7rem;color:rgba(255,255,255,.8);}
+.feed-avatar{width:45px;height:45px;border-radius:50%;border:2px solid #fff;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--bg4);cursor:pointer;}
+.feed-avatar img{width:100%;height:100%;object-fit:cover;}
+.music-bar{position:absolute;bottom:20px;left:15px;right:80px;z-index:1;}
+.music-info{display:flex;align-items:center;gap:8px;font-size:.75rem;color:rgba(255,255,255,.7);}
+.music-info i{animation:spin 3s linear infinite;}
+.feed-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text2);gap:15px;}
+.feed-empty i{font-size:3rem;color:var(--text3);}
+.play-pause-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;cursor:pointer;}
+.play-icon{font-size:4rem;color:rgba(255,255,255,.7);opacity:0;transition:opacity .2s;pointer-events:none;}
+.play-icon.show{opacity:1;}
+
+/* EXPLORE */
+#explorePage{overflow-y:auto;padding:15px;padding-top:60px;}
+.explore-header{position:fixed;top:0;left:0;right:0;z-index:10;background:rgba(0,0,0,.9);backdrop-filter:blur(20px);padding:10px 15px;}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--bg4);border-radius:var(--radius3);padding:10px 15px;}
+.search-box i{color:var(--text3);}
+.search-box input{flex:1;background:none;color:var(--text);font-size:.95rem;}
+.explore-section{margin-bottom:25px;}
+.explore-section h3{font-size:1rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.explore-section h3 i{color:var(--accent);}
+.explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+.explore-card{aspect-ratio:9/16;border-radius:var(--radius);overflow:hidden;position:relative;cursor:pointer;transition:var(--transition);}
+.explore-card:active{transform:scale(.97);}
+.explore-card .bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;}
+.explore-card .card-info{position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-size:.7rem;}
+.explore-card .card-info .views{display:flex;align-items:center;gap:4px;}
+.hashtag-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px;}
+.hashtag-pill{padding:8px 16px;background:var(--bg4);border-radius:var(--radius3);font-size:.8rem;color:var(--accent2);font-weight:600;cursor:pointer;transition:var(--transition);}
+.hashtag-pill:hover{background:var(--bg5);}
+.user-search-results{display:flex;flex-direction:column;gap:10px;}
+.user-search-item{display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg3);border-radius:var(--radius);cursor:pointer;}
+.user-search-item .avatar{width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--bg5);}
+.user-search-item .info{flex:1;}
+.user-search-item .info .name{font-weight:600;font-size:.9rem;}
+.user-search-item .info .stats{font-size:.75rem;color:var(--text2);}
+
+/* UPLOAD */
+#uploadPage{overflow-y:auto;padding:20px;padding-top:70px;}
+.page-title{position:fixed;top:0;left:0;right:0;z-index:10;background:rgba(0,0,0,.9);backdrop-filter:blur(20px);padding:15px 20px;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px;}
+.upload-area{border:2px dashed var(--bg5);border-radius:var(--radius2);padding:40px 20px;text-align:center;cursor:pointer;transition:var(--transition);margin-bottom:20px;}
+.upload-area:hover{border-color:var(--accent);background:rgba(254,44,85,.05);}
+.upload-area i{font-size:3rem;color:var(--accent);margin-bottom:10px;}
+.upload-area p{color:var(--text2);font-size:.9rem;}
+.upload-area .file-name{color:var(--accent2);margin-top:10px;font-size:.85rem;}
+.upload-preview{width:100%;max-height:300px;border-radius:var(--radius);overflow:hidden;margin-bottom:20px;display:none;}
+.upload-preview video{width:100%;max-height:300px;object-fit:contain;background:#000;}
+.hashtag-input-area{display:flex;flex-wrap:wrap;gap:5px;padding:10px;background:var(--bg4);border-radius:var(--radius);min-height:45px;align-items:center;}
+.hashtag-tag{padding:4px 10px;background:var(--accent);color:#fff;border-radius:var(--radius3);font-size:.8rem;display:flex;align-items:center;gap:5px;}
+.hashtag-tag .remove{cursor:pointer;opacity:.7;}
+.hashtag-input-area input{flex:1;min-width:80px;background:none;color:var(--text);font-size:.9rem;}
+
+/* NOTIFICATIONS */
+#notifPage{overflow-y:auto;padding-top:60px;}
+.notif-list{padding:10px 15px;}
+.notif-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius);transition:var(--transition);cursor:pointer;}
+.notif-item:hover{background:var(--bg3);}
+.notif-item.unread{background:rgba(254,44,85,.05);}
+.notif-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.notif-icon.like{background:rgba(254,44,85,.15);color:var(--accent);}
+.notif-icon.comment{background:rgba(37,244,238,.15);color:var(--accent2);}
+.notif-icon.follow{background:rgba(91,91,247,.15);color:var(--accent3);}
+.notif-icon.approved{background:rgba(0,200,83,.15);color:var(--green);}
+.notif-icon.rejected{background:rgba(255,23,68,.15);color:var(--red);}
+.notif-content{flex:1;}
+.notif-content .notif-text{font-size:.85rem;line-height:1.3;}
+.notif-content .notif-text strong{color:var(--text);}
+.notif-content .notif-time{font-size:.7rem;color:var(--text3);margin-top:3px;}
+.notif-empty{padding:40px;text-align:center;color:var(--text2);}
+.notif-empty i{font-size:3rem;margin-bottom:10px;display:block;color:var(--text3);}
+
+/* PROFILE */
+#profilePage{overflow-y:auto;padding-top:10px;}
+.profile-header{padding:20px;text-align:center;}
+.profile-avatar{width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:var(--bg4);border:3px solid var(--accent);overflow:hidden;cursor:pointer;}
+.profile-avatar img{width:100%;height:100%;object-fit:cover;}
+.profile-name{font-size:1.2rem;font-weight:700;margin-bottom:3px;}
+.profile-username{font-size:.85rem;color:var(--text2);margin-bottom:10px;}
+.profile-bio{font-size:.85rem;color:var(--text2);margin-bottom:15px;max-width:300px;margin-left:auto;margin-right:auto;}
+.profile-stats{display:flex;justify-content:center;gap:30px;margin-bottom:15px;}
+.profile-stat{text-align:center;}
+.profile-stat .num{font-size:1.2rem;font-weight:700;}
+.profile-stat .label{font-size:.7rem;color:var(--text2);}
+.profile-actions{display:flex;justify-content:center;gap:10px;margin-bottom:20px;}
+.profile-tabs{display:flex;border-bottom:1px solid var(--bg4);}
+.profile-tab{flex:1;padding:12px;text-align:center;font-size:.9rem;color:var(--text2);transition:var(--transition);cursor:pointer;}
+.profile-tab.active{color:var(--text);border-bottom:2px solid var(--text);}
+.profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px;}
+.profile-video-card{aspect-ratio:9/16;overflow:hidden;position:relative;cursor:pointer;}
+.profile-video-card .bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.profile-video-card .overlay{position:absolute;bottom:0;left:0;right:0;padding:5px;background:linear-gradient(transparent,rgba(0,0,0,.7));font-size:.65rem;display:flex;align-items:center;gap:3px;}
+.profile-video-card .status-badge{position:absolute;top:5px;right:5px;padding:2px 6px;border-radius:var(--radius);font-size:.55rem;font-weight:700;}
+.status-pending{background:var(--orange);color:#fff;}
+.status-approved{background:var(--green);color:#fff;}
+.status-rejected{background:var(--red);color:#fff;}
+.settings-section{padding:20px;}
+.settings-item{display:flex;align-items:center;justify-content:space-between;padding:15px;background:var(--bg3);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:var(--transition);}
+.settings-item:hover{background:var(--bg4);}
+.settings-item .left{display:flex;align-items:center;gap:12px;}
+.settings-item .left i{width:20px;text-align:center;color:var(--accent);}
+.settings-item .right{color:var(--text3);}
+
+/* ADMIN */
+#adminPage{overflow-y:auto;padding:15px;padding-top:70px;}
+.admin-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+.admin-stat{padding:15px;background:var(--bg3);border-radius:var(--radius);text-align:center;}
+.admin-stat .num{font-size:1.5rem;font-weight:700;}
+.admin-stat .label{font-size:.75rem;color:var(--text2);}
+.admin-stat.pending .num{color:var(--orange);}
+.admin-stat.approved .num{color:var(--green);}
+.admin-stat.rejected .num{color:var(--red);}
+.admin-stat.total .num{color:var(--accent2);}
+.admin-filter{display:flex;gap:8px;margin-bottom:15px;overflow-x:auto;padding-bottom:5px;}
+.admin-filter-btn{padding:8px 16px;border-radius:var(--radius3);font-size:.8rem;font-weight:600;background:var(--bg4);color:var(--text2);white-space:nowrap;transition:var(--transition);}
+.admin-filter-btn.active{background:var(--accent);color:#fff;}
+.admin-video-list{display:flex;flex-direction:column;gap:12px;}
+.admin-video-card{background:var(--bg3);border-radius:var(--radius);overflow:hidden;transition:var(--transition);}
+.admin-video-top{display:flex;gap:12px;padding:12px;}
+.admin-video-thumb{width:80px;height:120px;border-radius:8px;overflow:hidden;flex-shrink:0;}
+.admin-video-thumb .bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.admin-video-info{flex:1;display:flex;flex-direction:column;gap:4px;}
+.admin-video-info .title{font-weight:600;font-size:.9rem;}
+.admin-video-info .user{font-size:.8rem;color:var(--text2);}
+.admin-video-info .desc{font-size:.75rem;color:var(--text3);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.admin-video-info .meta{font-size:.7rem;color:var(--text3);margin-top:auto;}
+.admin-video-actions{display:flex;gap:8px;padding:0 12px 12px;}
+.admin-video-actions .btn{flex:1;padding:10px;font-size:.8rem;}
+
+/* COMMENTS MODAL */
+#commentsModal{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;justify-content:flex-end;}
+#commentsModal.show{display:flex;}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);animation:fadeIn .3s;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.comments-container{position:relative;z-index:1;background:var(--bg2);border-radius:var(--radius2) var(--radius2) 0 0;max-height:70vh;display:flex;flex-direction:column;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.comments-header{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--bg4);}
+.comments-header h3{font-size:1rem;}
+.comments-header button{font-size:1.2rem;color:var(--text2);}
+.comments-list{flex:1;overflow-y:auto;padding:15px 20px;}
+.comment-item{display:flex;gap:10px;margin-bottom:18px;}
+.comment-avatar{width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;background:var(--bg5);flex-shrink:0;}
+.comment-body{flex:1;}
+.comment-user{font-weight:600;font-size:.8rem;margin-bottom:2px;}
+.comment-text{font-size:.85rem;color:rgba(255,255,255,.9);line-height:1.4;margin-bottom:4px;}
+.comment-meta{display:flex;align-items:center;gap:15px;font-size:.7rem;color:var(--text3);}
+.comment-meta button{font-size:.7rem;color:var(--text3);display:flex;align-items:center;gap:4px;}
+.comment-meta button.liked{color:var(--accent);}
+.comments-input{display:flex;gap:10px;padding:12px 20px;border-top:1px solid var(--bg4);align-items:center;}
+.comments-input input{flex:1;padding:10px 15px;background:var(--bg4);border-radius:var(--radius3);color:var(--text);font-size:.9rem;}
+.comments-input button{width:35px;height:35px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;}
+.no-comments{text-align:center;padding:30px;color:var(--text3);font-size:.9rem;}
+
+/* SHARE MODAL */
+#shareModal{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;justify-content:flex-end;}
+#shareModal.show{display:flex;}
+.share-container{position:relative;z-index:1;background:var(--bg2);border-radius:var(--radius2) var(--radius2) 0 0;padding:20px;animation:slideUp .3s ease;}
+.share-title{text-align:center;font-weight:700;margin-bottom:20px;}
+.share-options{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px;}
+.share-option{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}
+.share-option .icon{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.share-option span{font-size:.7rem;color:var(--text2);}
+
+/* OTHER PROFILE PAGE */
+#otherProfilePage{overflow-y:auto;padding-top:60px;}
+.back-header{position:fixed;top:0;left:0;right:0;z-index:10;background:rgba(0,0,0,.9);backdrop-filter:blur(20px);padding:15px 20px;display:flex;align-items:center;gap:15px;}
+.back-header button{font-size:1.2rem;color:#fff;}
+.back-header h3{font-size:1rem;font-weight:600;}
+
+/* EDIT PROFILE MODAL */
+#editProfileModal{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;justify-content:flex-end;}
+#editProfileModal.show{display:flex;}
+.edit-profile-container{position:relative;z-index:1;background:var(--bg2);border-radius:var(--radius2) var(--radius2) 0 0;padding:20px;max-height:80vh;overflow-y:auto;animation:slideUp .3s ease;}
+.avatar-picker{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:15px 0;}
+.avatar-option{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:var(--bg4);cursor:pointer;transition:var(--transition);border:2px solid transparent;}
+.avatar-option.selected{border-color:var(--accent);background:var(--bg5);}
+
+/* TOAST */
+.toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{padding:12px 20px;background:var(--bg3);border-radius:var(--radius);box-shadow:var(--shadow);font-size:.85rem;animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards;pointer-events:auto;display:flex;align-items:center;gap:10px;border-left:3px solid var(--accent);}
+.toast.success{border-left-color:var(--green);}
+.toast.error{border-left-color:var(--red);}
+@keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{from{opacity:1}to{opacity:0}}
+
+/* DOUBLE TAP HEART */
+.double-tap-heart{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:5rem;color:var(--accent);z-index:5;pointer-events:none;filter:drop-shadow(0 0 20px rgba(254,44,85,.5));}
+.double-tap-heart.show{animation:doubleTapHeart .8s ease forwards;}
+@keyframes doubleTapHeart{0%{transform:translate(-50%,-50%) scale(0);opacity:1}50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
+
+/* VIDEO DETAIL - full screen */
+#videoDetail{position:fixed;inset:0;z-index:150;display:none;background:var(--bg);}
+#videoDetail.show{display:flex;flex-direction:column;}
+#videoDetail .detail-feed{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;}
+
+/* REPORT MODAL */
+#reportModal{position:fixed;inset:0;z-index:250;display:none;flex-direction:column;justify-content:flex-end;}
+#reportModal.show{display:flex;}
+.report-container{position:relative;z-index:1;background:var(--bg2);border-radius:var(--radius2) var(--radius2) 0 0;padding:20px;animation:slideUp .3s ease;}
+.report-option{padding:15px;border-bottom:1px solid var(--bg4);cursor:pointer;transition:var(--transition);}
+.report-option:hover{background:var(--bg3);}
+
+/* RESPONSIVE */
+@media(min-width:768px){
+  #bottomNav{left:50%;transform:translateX(-50%);max-width:500px;border-radius:var(--radius2) var(--radius2) 0 0;}
+  .page{left:50%;transform:translateX(-50%);max-width:500px;right:auto;width:100%;}
+  #commentsModal .comments-container,#shareModal .share-container,#editProfileModal .edit-profile-container,#reportModal .report-container{max-width:500px;margin:0 auto;}
+  #videoDetail{left:50%;transform:translateX(-50%);max-width:500px;right:auto;width:100%;}
+}
+
+/* Gradient backgrounds for demo videos */
+.grad-1{background:linear-gradient(135deg,#667eea,#764ba2);}
+.grad-2{background:linear-gradient(135deg,#f093fb,#f5576c);}
+.grad-3{background:linear-gradient(135deg,#4facfe,#00f2fe);}
+.grad-4{background:linear-gradient(135deg,#43e97b,#38f9d7);}
+.grad-5{background:linear-gradient(135deg,#fa709a,#fee140);}
+.grad-6{background:linear-gradient(135deg,#a18cd1,#fbc2eb);}
+.grad-7{background:linear-gradient(135deg,#fccb90,#d57eeb);}
+.grad-8{background:linear-gradient(135deg,#e0c3fc,#8ec5fc);}
+.grad-9{background:linear-gradient(135deg,#f5576c,#ff6f00);}
+.grad-10{background:linear-gradient(135deg,#0250c5,#d43f8d);}
+
+/* Verified badge */
+.verified{color:var(--accent2);font-size:.7rem;margin-left:2px;}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="logo">VidFlow</div>
+  <div class="loader"></div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- AUTH -->
+<div id="auth">
+  <div class="auth-box">
+    <h1>VidFlow</h1>
+    <p class="sub">Descubra e compartilhe vídeos incríveis</p>
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="login">Entrar</div>
+      <div class="auth-tab" data-tab="register">Cadastrar</div>
+    </div>
+    <form id="loginForm">
+      <div class="form-group"><label>Usuário</label><input type="text" id="loginUser" placeholder="Seu nome de usuário" required></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="loginPass" placeholder="Sua senha" required></div>
+      <div class="auth-error" id="loginError"></div>
+      <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+    </form>
+    <form id="registerForm" style="display:none">
+      <div class="form-group"><label>Nome de usuário</label><input type="text" id="regUser" placeholder="nome_usuario" required></div>
+      <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="email@exemplo.com" required></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="regPass" placeholder="Mínimo 6 caracteres" required></div>
+      <div class="form-group"><label>Confirmar Senha</label><input type="password" id="regPassConfirm" placeholder="Repita a senha" required></div>
+      <div class="auth-error" id="regError"></div>
+      <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fas fa-user-plus"></i> Cadastrar</button>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- FEED -->
+  <div class="page active" id="feedPage">
+    <div class="feed-container" id="feedContainer"></div>
+  </div>
+
+  <!-- EXPLORE -->
+  <div class="page" id="explorePage">
+    <div class="explore-header">
+      <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Buscar vídeos, hashtags, usuários..."></div>
+    </div>
+    <div id="exploreContent"></div>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="page" id="uploadPage">
+    <div class="page-title"><i class="fas fa-plus-circle"></i> Novo Vídeo</div>
+    <div class="upload-area" id="uploadArea">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>Toque para selecionar um vídeo</p>
+      <p style="font-size:.75rem;color:var(--text3);margin-top:5px">Máximo 60 segundos • MP4, WebM</p>
+      <div class="file-name" id="fileName"></div>
+    </div>
+    <input type="file" id="videoFileInput" accept="video/*" style="display:none">
+    <div class="upload-preview" id="uploadPreview"><video id="previewVideo" controls></video></div>
+    <div class="form-group"><label>Título</label><input type="text" id="vidTitle" placeholder="Título do vídeo" maxlength="100"></div>
+    <div class="form-group"><label>Descrição</label><textarea id="vidDesc" placeholder="Descreva seu vídeo..." rows="3" style="resize:none;"></textarea></div>
+    <div class="form-group"><label>Hashtags (pressione Enter para adicionar)</label>
+      <div class="hashtag-input-area" id="hashtagArea"><input type="text" id="hashtagInput" placeholder="Adicionar hashtag..."></div>
+    </div>
+    <button class="btn btn-primary" id="submitVideo" style="margin-top:10px"><i class="fas fa-paper-plane"></i> Enviar para aprovação</button>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="page" id="notifPage">
+    <div class="page-title"><i class="fas fa-bell"></i> Notificações</div>
+    <div class="notif-list" id="notifList"></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="profilePage">
+    <div id="profileContent"></div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="page" id="adminPage">
+    <div class="page-title"><i class="fas fa-shield-alt"></i> Painel Admin</div>
+    <div id="adminContent"></div>
+  </div>
+
+  <!-- OTHER USER PROFILE -->
+  <div class="page" id="otherProfilePage">
+    <div class="back-header"><button onclick="app.goBack()"><i class="fas fa-arrow-left"></i></button><h3 id="otherProfileTitle">Perfil</h3></div>
+    <div id="otherProfileContent"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div id="bottomNav">
+    <div class="nav-item active" data-page="feedPage"><i class="fas fa-home"></i><span>Início</span></div>
+    <div class="nav-item" data-page="explorePage"><i class="fas fa-compass"></i><span>Explorar</span></div>
+    <div class="nav-item upload-btn" data-page="uploadPage"><i class="fas fa-plus-circle"></i><span></span></div>
+    <div class="nav-item" data-page="notifPage"><i class="fas fa-bell"></i><span>Avisos</span><div class="nav-badge" id="notifBadge" style="display:none">0</div></div>
+    <div class="nav-item" data-page="profilePage"><i class="fas fa-user"></i><span>Perfil</span></div>
+  </div>
+</div>
+
+<!-- COMMENTS MODAL -->
+<div id="commentsModal">
+  <div class="modal-backdrop" onclick="app.closeComments()"></div>
+  <div class="comments-container">
+    <div class="comments-header"><h3 id="commentsCount">Comentários</h3><button onclick="app.closeComments()"><i class="fas fa-times"></i></button></div>
+    <div class="comments-list" id="commentsList"></div>
+    <div class="comments-input"><input type="text" id="commentInput" placeholder="Adicionar comentário..."><button onclick="app.submitComment()"><i class="fas fa-paper-plane"></i></button></div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div id="shareModal">
+  <div class="modal-backdrop" onclick="app.closeShare()"></div>
+  <div class="share-container">
+    <div class="share-title">Compartilhar</div>
+    <div class="share-options">
+      <div class="share-option" onclick="app.shareAction('whatsapp')"><div class="icon" style="background:#25D366;color:#fff"><i class="fab fa-whatsapp"></i></div><span>WhatsApp</span></div>
+      <div class="share-option" onclick="app.shareAction('twitter')"><div class="icon" style="background:#1DA1F2;color:#fff"><i class="fab fa-twitter"></i></div><span>Twitter</span></div>
+      <div class="share-option" onclick="app.shareAction('facebook')"><div class="icon" style="background:#1877F2;color:#fff"><i class="fab fa-facebook-f"></i></div><span>Facebook</span></div>
+      <div class="share-option" onclick="app.shareAction('copy')"><div class="icon" style="background:var(--bg5);color:#fff"><i class="fas fa-link"></i></div><span>Copiar Link</span></div>
+      <div class="share-option" onclick="app.shareAction('report')"><div class="icon" style="background:var(--bg5);color:var(--red)"><i class="fas fa-flag"></i></div><span>Denunciar</span></div>
+    </div>
+    <button class="btn btn-outline" style="width:100%" onclick="app.closeShare()">Cancelar</button>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div id="editProfileModal">
+  <div class="modal-backdrop" onclick="app.closeEditProfile()"></div>
+  <div class="edit-profile-container">
+    <div class="comments-header"><h3>Editar Perfil</h3><button onclick="app.closeEditProfile()"><i class="fas fa-times"></i></button></div>
+    <div style="padding:15px 0">
+      <label style="font-size:.85rem;color:var(--text2);display:block;margin-bottom:8px">Escolha seu avatar</label>
+      <div class="avatar-picker" id="avatarPicker"></div>
+      <div class="form-group"><label>Nome de usuário</label><input type="text" id="editUsername"></div>
+      <div class="form-group"><label>Bio</label><textarea id="editBio" rows="3" style="resize:none" placeholder="Conte sobre você..."></textarea></div>
+      <button class="btn btn-primary" onclick="app.saveProfile()"><i class="fas fa-check"></i> Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div id="reportModal">
+  <div class="modal-backdrop" onclick="document.getElementById('reportModal').classList.remove('show')"></div>
+  <div class="report-container">
+    <div class="comments-header"><h3>Denunciar vídeo</h3><button onclick="document.getElementById('reportModal').classList.remove('show')"><i class="fas fa-times"></i></button></div>
+    <div class="report-option" onclick="app.submitReport('spam')">🚫 Spam</div>
+    <div class="report-option" onclick="app.submitReport('inappropriate')">⚠️ Conteúdo inapropriado</div>
+    <div class="report-option" onclick="app.submitReport('violence')">🔴 Violência</div>
+    <div class="report-option" onclick="app.submitReport('harassment')">😤 Assédio</div>
+    <div class="report-option" onclick="app.submitReport('copyright')">©️ Direitos autorais</div>
+    <div class="report-option" onclick="app.submitReport('other')">📝 Outro</div>
+  </div>
+</div>
+
+<script>
+// ==================== DATABASE ====================
+class DB {
+  static get(key) { try { return JSON.parse(localStorage.getItem('vf_' + key)); } catch { return null; } }
+  static set(key, val) { localStorage.setItem('vf_' + key, JSON.stringify(val)); }
+  static getUsers() { return this.get('users') || []; }
+  static setUsers(u) { this.set('users', u); }
+  static getVideos() { return this.get('videos') || []; }
+  static setVideos(v) { this.set('videos', v); }
+  static getComments() { return this.get('comments') || []; }
+  static setComments(c) { this.set('comments', c); }
+  static getNotifs() { return this.get('notifications') || []; }
+  static setNotifs(n) { this.set('notifications', n); }
+  static getSession() { return this.get('session'); }
+  static setSession(s) { this.set('session', s); }
+}
+
+// ==================== VIDEO BLOB STORE (IndexedDB) ====================
+class VideoStore {
+  static open() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open('VidFlowBlobs', 1);
+      req.onupgradeneeded = e => e.target.result.createObjectStore('blobs');
+      req.onsuccess = e => { this.db = e.target.result; resolve(); };
+      req.onerror = reject;
+    });
+  }
+  static save(id, blob) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction('blobs', 'readwrite');
+      tx.objectStore('blobs').put(blob, id);
+      tx.oncomplete = resolve;
+      tx.onerror = reject;
+    });
+  }
+  static load(id) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction('blobs', 'readonly');
+      const req = tx.objectStore('blobs').get(id);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = reject;
+    });
+  }
+  static remove(id) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction('blobs', 'readwrite');
+      tx.objectStore('blobs').delete(id);
+      tx.oncomplete = resolve;
+      tx.onerror = reject;
+    });
+  }
+}
+
+// ==================== APP ====================
+class App {
+  constructor() {
+    this.currentUser = null;
+    this.currentPage = 'feedPage';
+    this.previousPage = 'feedPage';
+    this.currentVideoId = null;
+    this.uploadHashtags = [];
+    this.selectedFile = null;
+    this.blobUrls = {};
+    this.lastTap = 0;
+    this.avatars = ['😀','😎','🤩','🥳','😇','🤗','🧑','👩','👨','👧','👦','🧔','👩‍🦰','👨‍🦱','👩‍🦳','🦊','🐱','🐶','🦄','🐼','🦋','🌸','⭐','🔥','💎','🎵','🎮','🏀','🎨','🌈'];
+  }
+
+  // ---- INIT ----
+  async init() {
+    await VideoStore.open();
+    if (!DB.get('initialized')) this.setupDemoData();
+    this.bindEvents();
+    const session = DB.getSession();
+    if (session) {
+      const user = DB.getUsers().find(u => u.id === session);
+      if (user) { this.currentUser = user; this.showApp(); }
+      else this.showAuth();
+    } else this.showAuth();
+    setTimeout(() => { document.getElementById('splash').classList.add('hide'); }, 800);
+  }
+
+  // ---- DEMO DATA ----
+  setupDemoData() {
+    const now = Date.now();
+    const users = [
+      { id: 'u1', username: 'admin', email: 'admin@vidflow.com', password: 'admin123', avatar: '🛡️', bio: 'Administrador do VidFlow', followers: ['u2','u3','u4','u5'], following: [], isAdmin: true, verified: true, createdAt: now - 86400000 * 30 },
+      { id: 'u2', username: 'demo', email: 'demo@test.com', password: 'demo123', avatar: '😎', bio: 'Apenas explorando! 🌟', followers: ['u3','u4'], following: ['u1','u3','u4'], isAdmin: false, verified: false, createdAt: now - 86400000 * 20 },
+      { id: 'u3', username: 'maria_dance', email: 'maria@test.com', password: 'maria123', avatar: '💃', bio: 'Dançarina | São Paulo 🇧🇷\n✨ Dança é vida!', followers: ['u1','u2','u4','u5'], following: ['u1','u2'], isAdmin: false, verified: true, createdAt: now - 86400000 * 25 },
+      { id: 'u4', username: 'pedro_music', email: 'pedro@test.com', password: 'pedro123', avatar: '🎵', bio: 'Produtor Musical 🎧\nBeats & Vibes', followers: ['u2','u3','u5'], following: ['u1','u3'], isAdmin: false, verified: false, createdAt: now - 86400000 * 15 },
+      { id: 'u5', username: 'ana_comedy', email: 'ana@test.com', password: 'ana123', avatar: '😂', bio: 'Humor do dia a dia 🤣\nRindo sempre!', followers: ['u3','u4'], following: ['u1','u3','u4'], isAdmin: false, verified: false, createdAt: now - 86400000 * 10 }
+    ];
+
+    const videos = [
+      { id: 'v1', userId: 'u3', isDemo: true, gradClass: 'grad-1', demoIcon: '💃', videoUrl: null, title: 'Dance Challenge 🔥', description: 'Nova coreografia! Quem topa? 💪', hashtags: ['dance','challenge','viral'], likes: ['u2','u4','u5','u1'], status: 'approved', views: 15420, createdAt: now - 86400000 * 5 },
+      { id: 'v2', userId: 'u4', isDemo: true, gradClass: 'grad-3', demoIcon: '🎵', videoUrl: null, title: 'Beat Novo 🎧', description: 'Produção nova saindo do forno! O que acharam?', hashtags: ['music','beat','producer'], likes: ['u2','u3','u5'], status: 'approved', views: 8930, createdAt: now - 86400000 * 4 },
+      { id: 'v3', userId: 'u5', isDemo: true, gradClass: 'grad-5', demoIcon: '😂', videoUrl: null, title: 'Vida Real vs Instagram 😅', description: 'Todo mundo já passou por isso kkkk', hashtags: ['comedy','humor','relatable'], likes: ['u2','u3','u4','u1'], status: 'approved', views: 23100, createdAt: now - 86400000 * 3 },
+      { id: 'v4', userId: 'u3', isDemo: true, gradClass: 'grad-2', demoIcon: '🌅', videoUrl: null, title: 'Sunset Vibes 🌇', description: 'Pôr do sol incrível de hoje! Natureza perfeita ✨', hashtags: ['sunset','nature','beautiful'], likes: ['u4','u5'], status: 'approved', views: 5670, createdAt: now - 86400000 * 2 },
+      { id: 'v5', userId: 'u2', isDemo: true, gradClass: 'grad-4', demoIcon: '🌟', videoUrl: null, title: 'Meu Primeiro Vídeo!', description: 'Oi gente! Começando minha jornada aqui no VidFlow 🚀', hashtags: ['primeiro','newhere'], likes: ['u3','u4','u5'], status: 'approved', views: 3240, createdAt: now - 86400000 * 1 },
+      { id: 'v6', userId: 'u5', isDemo: true, gradClass: 'grad-7', demoIcon: '🐱', videoUrl: null, title: 'Meu gato maluco 🐈', description: 'Olha o que ele fez dessa vez kkkk', hashtags: ['cat','pets','funny'], likes: ['u2','u3'], status: 'approved', views: 12800, createdAt: now - 3600000 * 12 },
+      { id: 'v7', userId: 'u4', isDemo: true, gradClass: 'grad-10', demoIcon: '🎤', videoUrl: null, title: 'Freestyle Session', description: 'Improviso no estúdio 🎤🔥', hashtags: ['freestyle','rap','music'], likes: ['u2'], status: 'approved', views: 4560, createdAt: now - 3600000 * 6 },
+      { id: 'v8', userId: 'u3', isDemo: true, gradClass: 'grad-9', demoIcon: '🏋️', videoUrl: null, title: 'Treino do dia 💪', description: 'Rotina de exercícios em casa!', hashtags: ['fitness','workout','health'], likes: [], status: 'pending', views: 0, createdAt: now - 3600000 * 2 },
+    ];
+
+    const comments = [
+      { id: 'c1', videoId: 'v1', userId: 'u2', text: 'Arrasou demais!! 🔥🔥', likes: ['u3','u4'], parentId: null, createdAt: now - 86400000 * 4 },
+      { id: 'c2', videoId: 'v1', userId: 'u4', text: 'Essa coreografia é insana!', likes: ['u3'], parentId: null, createdAt: now - 86400000 * 3 },
+      { id: 'c3', videoId: 'v1', userId: 'u3', text: 'Obrigada gente!! 💕', likes: ['u2','u4'], parentId: 'c1', createdAt: now - 86400000 * 3 },
+      { id: 'c4', videoId: 'v3', userId: 'u2', text: 'KKKKKK muito real isso 😂', likes: ['u5'], parentId: null, createdAt: now - 86400000 * 2 },
+      { id: 'c5', videoId: 'v3', userId: 'u3', text: 'Me identifiquei total!', likes: [], parentId: null, createdAt: now - 86400000 * 2 },
+      { id: 'c6', videoId: 'v2', userId: 'u5', text: 'Que beat incrível! 🎶', likes: ['u4'], parentId: null, createdAt: now - 86400000 * 3 },
+      { id: 'c7', videoId: 'v5', userId: 'u3', text: 'Bem-vindo(a)! 🎉', likes: ['u2'], parentId: null, createdAt: now - 86400000 },
+    ];
+
+    const notifications = [
+      { id: 'n1', userId: 'u2', type: 'like', fromUserId: 'u3', videoId: 'v5', read: false, createdAt: now - 86400000 },
+      { id: 'n2', userId: 'u2', type: 'comment', fromUserId: 'u3', videoId: 'v5', read: false, createdAt: now - 86400000 },
+      { id: 'n3', userId: 'u2', type: 'follow', fromUserId: 'u4', videoId: null, read: true, createdAt: now - 86400000 * 3 },
+    ];
+
+    DB.setUsers(users);
+    DB.setVideos(videos);
+    DB.setComments(comments);
+    DB.setNotifs(notifications);
+    DB.set('initialized', true);
+  }
+
+  // ---- AUTH ----
+  showAuth() {
+    document.getElementById('auth').classList.add('show');
+    document.getElementById('app').classList.remove('show');
+  }
+
+  showApp() {
+    document.getElementById('auth').classList.remove('show');
+    document.getElementById('app').classList.add('show');
+    this.navigateTo('feedPage');
+    this.updateNotifBadge();
+  }
+
+  login(username, password) {
+    const users = DB.getUsers();
+    const user = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+    if (!user) return false;
+    this.currentUser = user;
+    DB.setSession(user.id);
+    this.showApp();
+    return true;
+  }
+
+  register(username, email, password) {
+    const users = DB.getUsers();
+    if (users.find(u => u.username.toLowerCase() === username.toLowerCase())) return 'Nome de usuário já existe';
+    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) return 'Email já cadastrado';
+    if (password.length < 6) return 'Senha deve ter pelo menos 6 caracteres';
+    const user = {
+      id: 'u' + Date.now(),
+      username, email, password,
+      avatar: this.avatars[Math.floor(Math.random() * this.avatars.length)],
+      bio: '', followers: [], following: [],
+      isAdmin: false, verified: false,
+      createdAt: Date.now()
+    };
+    users.push(user);
+    DB.setUsers(users);
+    this.currentUser = user;
+    DB.setSession(user.id);
+    this.showApp();
+    return true;
+  }
+
+  logout() {
+    this.currentUser = null;
+    DB.setSession(null);
+    Object.values(this.blobUrls).forEach(url => URL.revokeObjectURL(url));
+    this.blobUrls = {};
+    this.showAuth();
+  }
+
+  refreshUser() {
+    if (!this.currentUser) return;
+    this.currentUser = DB.getUsers().find(u => u.id === this.currentUser.id);
+  }
+
+  // ---- NAVIGATION ----
+  navigateTo(page) {
+    this.previousPage = this.currentPage;
+    this.currentPage = page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if (navItem) navItem.classList.add('active');
+    this.refreshUser();
+    switch(page) {
+      case 'feedPage': this.renderFeed(); break;
+      case 'explorePage': this.renderExplore(); break;
+      case 'uploadPage': this.resetUploadForm(); break;
+      case 'notifPage': this.renderNotifications(); break;
+      case 'profilePage': this.renderProfile(); break;
+      case 'adminPage': this.renderAdmin(); break;
+    }
+  }
+
+  goBack() {
+    this.navigateTo(this.previousPage || 'feedPage');
+  }
+
+  // ---- FEED ----
+  async renderFeed() {
+    const container = document.getElementById('feedContainer');
+    const videos = DB.getVideos().filter(v => v.status === 'approved').sort((a, b) => b.createdAt - a.createdAt);
+    if (videos.length === 0) {
+      container.innerHTML = '<div class="feed-empty"><i class="fas fa-video-slash"></i><p>Nenhum vídeo disponível ainda</p><p style="font-size:.8rem">Seja o primeiro a postar!</p></div>';
+      return;
+    }
+    let html = '';
+    for (const v of videos) {
+      html += await this.buildFeedItem(v);
+    }
+    container.innerHTML = html;
+    this.setupFeedObserver();
+  }
+
+  async buildFeedItem(video, inDetail = false) {
+    const users = DB.getUsers();
+    const user = users.find(u => u.id === video.userId);
+    if (!user) return '';
+    const comments = DB.getComments().filter(c => c.videoId === video.id && !c.parentId);
+    const liked = video.likes.includes(this.currentUser.id);
+    const isFollowing = this.currentUser.following && this.currentUser.following.includes(video.userId);
+    const isSelf = video.userId === this.currentUser.id;
+
+    let bgHtml;
+    if (video.isDemo) {
+      const particles = Array.from({length: 8}, (_, i) => {
+        const s = 30 + Math.random() * 80;
+        const l = Math.random() * 80;
+        const t = Math.random() * 80;
+        const d = 3 + Math.random() * 5;
+        const del = Math.random() * 3;
+        return `<div class="particle" style="width:${s}px;height:${s}px;left:${l}%;top:${t}%;animation-duration:${d}s;animation-delay:${del}s"></div>`;
+      }).join('');
+      bgHtml = `<div class="demo-bg ${video.gradClass}"><div class="particles">${particles}</div><span style="position:relative;z-index:1;filter:drop-shadow(0 0 20px rgba(0,0,0,.3))">${video.demoIcon || '🎬'}</span></div>`;
+    } else {
+      let videoSrc = this.blobUrls[video.id];
+      if (!videoSrc) {
+        try {
+          const blob = await VideoStore.load(video.id);
+          if (blob) { videoSrc = URL.createObjectURL(blob); this.blobUrls[video.id] = videoSrc; }
+        } catch(e) {}
+      }
+      if (videoSrc) {
+        bgHtml = `<video src="${videoSrc}" loop muted playsinline preload="metadata"></video>`;
+      } else {
+        bgHtml = `<div class="demo-bg grad-6"><span>🎬</span></div>`;
+      }
+    }
+
+    const heightStyle = inDetail ? 'height:100vh' : '';
+
+    return `
+    <div class="feed-item" data-video-id="${video.id}" style="${heightStyle}">
+      <div class="feed-bg">${bgHtml}</div>
+      <div class="feed-overlay"></div>
+      <div class="play-pause-overlay" data-vid="${video.id}">
+        <i class="fas fa-play play-icon" id="playIcon_${video.id}"></i>
+        <i class="fas fa-heart double-tap-heart" id="heartAnim_${video.id}"></i>
+      </div>
+      <div class="feed-info">
+        <div class="username">
+          <span onclick="app.viewProfile('${video.userId}')" style="cursor:pointer">@${user.username}</span>
+          ${user.verified ? '<i class="fas fa-check-circle verified"></i>' : ''}
+          ${!isSelf ? `<button class="follow-btn-inline ${isFollowing ? 'following' : ''}" onclick="app.toggleFollow('${video.userId}',this)">${isFollowing ? 'Seguindo' : 'Seguir'}</button>` : ''}
+        </div>
+        <div class="description">${video.description || video.title}</div>
+        <div class="hashtags">${(video.hashtags || []).map(h => `<span onclick="app.searchHashtag('${h}')">#${h}</span>`).join(' ')}</div>
+      </div>
+      <div class="feed-actions">
+        <div class="feed-action">
+          <div class="feed-avatar" onclick="app.viewProfile('${video.userId}')">${user.avatar ? `<span>${user.avatar}</span>` : '👤'}</div>
+        </div>
+        <div class="feed-action">
+          <button class="${liked ? 'liked' : ''}" onclick="app.toggleLike('${video.id}',this)"><i class="fas fa-heart"></i></button>
+          <span>${this.formatNum(video.likes.length)}</span>
+        </div>
+        <div class="feed-action">
+          <button onclick="app.openComments('${video.id}')"><i class="fas fa-comment-dots"></i></button>
+          <span>${this.formatNum(comments.length)}</span>
+        </div>
+        <div class="feed-action">
+          <button onclick="app.openShare('${video.id}')"><i class="fas fa-share"></i></button>
+          <span>Enviar</span>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  setupFeedObserver() {
+    const videos = document.querySelectorAll('.feed-item video');
+    if (!videos.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+    videos.forEach(v => observer.observe(v));
+  }
+
+  // ---- LIKES ----
+  toggleLike(videoId, btn) {
+    const videos = DB.getVideos();
+    const video = videos.find(v => v.id === videoId);
+    if (!video) return;
+    const idx = video.likes.indexOf(this.currentUser.id);
+    if (idx === -1) {
+      video.likes.push(this.currentUser.id);
+      btn.classList.add('liked');
+      if (video.userId !== this.currentUser.id) {
+        this.addNotification(video.userId, 'like', this.currentUser.id, videoId);
+      }
+    } else {
+      video.likes.splice(idx, 1);
+      btn.classList.remove('liked');
+    }
+    DB.setVideos(videos);
+    const span = btn.parentElement.querySelector('span');
+    if (span) span.textContent = this.formatNum(video.likes.length);
+  }
+
+  handleDoubleTap(videoId) {
+    const videos = DB.getVideos();
+    const video = videos.find(v => v.id === videoId);
+    if (!video) return;
+    if (!video.likes.includes(this.currentUser.id)) {
+      video.likes.push(this.currentUser.id);
+      DB.setVideos(videos);
+      if (video.userId !== this.currentUser.id) {
+        this.addNotification(video.userId, 'like', this.currentUser.id, videoId);
+      }
+      // Update button
+      const item = document.querySelector(`.feed-item[data-video-id="${videoId}"]`);
+      if (item) {
+        const likeBtn = item.querySelector('.feed-action button');
+        if (likeBtn) { likeBtn.classList.add('liked'); }
+        const span = item.querySelector('.feed-action span');
+        if (span && !isNaN(parseInt(span.textContent))) span.textContent = this.formatNum(video.likes.length);
+      }
+    }
+    // Heart animation
+    const heart = document.getElementById('heartAnim_' + videoId);
+    if (heart) {
+      heart.classList.remove('show');
+      void heart.offsetWidth;
+      heart.classList.add('show');
+      setTimeout(() => heart.classList.remove('show'), 800);
+    }
+  }
+
+  // ---- FOLLOW ----
+  toggleFollow(userId, btn) {
+    if (userId === this.currentUser.id) return;
+    const users = DB.getUsers();
+    const me = users.find(u => u.id === this.currentUser.id);
+    const other = users.find(u => u.id === userId);
+    if (!me || !other) return;
+    if (!me.following) me.following = [];
+    if (!other.followers) other.followers = [];
+    const idx = me.following.indexOf(userId);
+    if (idx === -1) {
+      me.following.push(userId);
+      if (!other.followers.includes(me.id)) other.followers.push(me.id);
+      if (btn) { btn.textContent = 'Seguindo'; btn.classList.add('following'); }
+      this.addNotification(userId, 'follow', me.id, null);
+      this.toast('Seguindo @' + other.username, 'success');
+    } else {
+      me.following.splice(idx, 1);
+      const fi = other.followers.indexOf(me.id);
+      if (fi !== -1) other.followers.splice(fi, 1);
+      if (btn) { btn.textContent = 'Seguir'; btn.classList.remove('following'); }
+    }
+    DB.setUsers(users);
+    this.refreshUser();
+    // Update all follow buttons on page for this user
+    document.querySelectorAll(`.follow-btn-inline`).forEach(b => {
+      const feedItem = b.closest('.feed-item');
+      if (feedItem) {
+        const vid = DB.getVideos().find(v => v.id === feedItem.dataset.videoId);
+        if (vid && vid.userId === userId) {
+          const isFollowing = me.following.includes(userId);
+          b.textContent = isFollowing ? 'Seguindo' : 'Seguir';
+          b.classList.toggle('following', isFollowing);
+        }
+      }
+    });
+  }
+
+  // ---- COMMENTS ----
+  openComments(videoId) {
+    this.currentVideoId = videoId;
+    document.getElementById('commentsModal').classList.add('show');
+    this.renderCommentsList(videoId);
+    document.getElementById('commentInput').value = '';
+    document.getElementById('commentInput').focus();
+  }
+
+  closeComments() {
+    document.getElementById('commentsModal').classList.remove('show');
+  }
+
+  renderCommentsList(videoId) {
+    const comments = DB.getComments().filter(c => c.videoId === videoId).sort((a, b) => a.createdAt - b.createdAt);
+    const topLevel = comments.filter(c => !c.parentId);
+    const users = DB.getUsers();
+
+    document.getElementById('commentsCount').textContent = `${comments.length} comentário${comments.length !== 1 ? 's' : ''}`;
+
+    if (topLevel.length === 0) {
+      document.getElementById('commentsList').innerHTML = '<div class="no-comments"><i class="far fa-comment-dots" style="font-size:2rem;margin-bottom:10px;display:block;color:var(--text3)"></i>Nenhum comentário ainda.<br>Seja o primeiro!</div>';
+      return;
+    }
+
+    let html = '';
+    topLevel.forEach(c => {
+      const u = users.find(x => x.id === c.userId);
+      if (!u) return;
+      const liked = c.likes && c.likes.includes(this.currentUser.id);
+      const replies = comments.filter(r => r.parentId === c.id);
+
+      html += `<div class="comment-item">
+        <div class="comment-avatar" onclick="app.viewProfile('${u.id}')" style="cursor:pointer">${u.avatar || '👤'}</div>
+        <div class="comment-body">
+          <div class="comment-user" onclick="app.viewProfile('${u.id}')" style="cursor:pointer">@${u.username} ${u.verified ? '<i class="fas fa-check-circle verified"></i>' : ''}</div>
+          <div class="comment-text">${this.escapeHtml(c.text)}</div>
+          <div class="comment-meta">
+            <span>${this.timeAgo(c.createdAt)}</span>
+            <button class="${liked ? 'liked' : ''}" onclick="app.toggleCommentLike('${c.id}',this)"><i class="fas fa-heart"></i> ${c.likes ? c.likes.length : 0}</button>
+            <button onclick="document.getElementById('commentInput').value='@${u.username} ';document.getElementById('commentInput').dataset.reply='${c.id}';document.getElementById('commentInput').focus()">Responder</button>
+          </div>`;
+
+      replies.forEach(r => {
+        const ru = users.find(x => x.id === r.userId);
+        if (!ru) return;
+        const rLiked = r.likes && r.likes.includes(this.currentUser.id);
+        html += `<div class="comment-item" style="margin-top:12px;margin-left:0">
+          <div class="comment-avatar" style="width:28px;height:28px;font-size:.8rem" onclick="app.viewProfile('${ru.id}')">${ru.avatar || '👤'}</div>
+          <div class="comment-body">
+            <div class="comment-user" style="font-size:.75rem">@${ru.username}</div>
+            <div class="comment-text" style="font-size:.8rem">${this.escapeHtml(r.text)}</div>
+            <div class="comment-meta">
+              <span>${this.timeAgo(r.createdAt)}</span>
+              <button class="${rLiked ? 'liked' : ''}" onclick="app.toggleCommentLike('${r.id}',this)"><i class="fas fa-heart"></i> ${r.likes ? r.likes.length : 0}</button>
+            </div>
+          </div>
+        </div>`;
+      });
+
+      html += `</div></div>`;
+    });
+
+    document.getElementById('commentsList').innerHTML = html;
+    const list = document.getElementById('commentsList');
+    list.scrollTop = list.scrollHeight;
+  }
+
+  submitComment() {
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
+    if (!text || !this.currentVideoId) return;
+
+    const comments = DB.getComments();
+    const parentId = input.dataset.reply || null;
+    const comment = {
+      id: 'c' + Date.now(),
+      videoId: this.currentVideoId,
+      userId: this.currentUser.id,
+      text, likes: [], parentId,
+      createdAt: Date.now()
+    };
+    comments.push(comment);
+    DB.setComments(comments);
+    input.value = '';
+    input.dataset.reply = '';
+
+    // Notify video owner
+    const video = DB.getVideos().find(v => v.id === this.currentVideoId);
+    if (video && video.userId !== this.currentUser.id) {
+      this.addNotification(video.userId, 'comment', this.currentUser.id, this.currentVideoId);
+    }
+
+    this.renderCommentsList(this.currentVideoId);
+  }
+
+  toggleCommentLike(commentId, btn) {
+    const comments = DB.getComments();
+    const comment = comments.find(c => c.id === commentId);
+    if (!comment) return;
+    if (!comment.likes) comment.likes = [];
+    const idx = comment.likes.indexOf(this.currentUser.id);
+    if (idx === -1) {
+      comment.likes.push(this.currentUser.id);
+      btn.classList.add('liked');
+    } else {
+      comment.likes.splice(idx, 1);
+      btn.classList.remove('liked');
+    }
+    DB.setComments(comments);
+    btn.innerHTML = `<i class="fas fa-heart"></i> ${comment.likes.length}`;
+  }
+
+  // ---- SHARE ----
+  openShare(videoId) {
+    this.currentVideoId = videoId;
+    document.getElementById('shareModal').classList.add('show');
+  }
+
+  closeShare() {
+    document.getElementById('shareModal').classList.remove('show');
+  }
+
+  shareAction(type) {
+    const url = window.location.href;
+    switch(type) {
+      case 'whatsapp': window.open(`https://wa.me/?text=Confira este vídeo no VidFlow! ${url}`); break;
+      case 'twitter': window.open(`https://twitter.com/intent/tweet?text=Confira este vídeo no VidFlow!&url=${url}`); break;
+      case 'facebook': window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`); break;
+      case 'copy':
+        navigator.clipboard.writeText(url).then(() => this.toast('Link copiado!', 'success'));
+        break;
+      case 'report':
+        this.closeShare();
+        document.getElementById('reportModal').classList.add('show');
+        return;
+    }
+    this.closeShare();
+  }
+
+  submitReport(reason) {
+    document.getElementById('reportModal').classList.remove('show');
+    this.toast('Denúncia enviada. Obrigado pelo feedback!', 'success');
+  }
+
+  // ---- UPLOAD ----
+  resetUploadForm() {
+    document.getElementById('vidTitle').value = '';
+    document.getElementById('vidDesc').value = '';
+    document.getElementById('hashtagInput').value = '';
+    document.getElementById('fileName').textContent = '';
+    document.getElementById('uploadPreview').style.display = 'none';
+    this.uploadHashtags = [];
+    this.selectedFile = null;
+    this.renderHashtags();
+  }
+
+  handleFileSelect(file) {
+    if (!file) return;
+    if (!file.type.startsWith('video/')) {
+      this.toast('Por favor, selecione um arquivo de vídeo', 'error');
+      return;
+    }
+    if (file.size > 100 * 1024 * 1024) {
+      this.toast('Arquivo muito grande. Máximo 100MB', 'error');
+      return;
+    }
+    this.selectedFile = file;
+    document.getElementById('fileName').textContent = file.name;
+
+    const preview = document.getElementById('uploadPreview');
+    const previewVid = document.getElementById('previewVideo');
+    const url = URL.createObjectURL(file);
+    previewVid.src = url;
+    preview.style.display = 'block';
+
+    // Check duration
+    previewVid.onloadedmetadata = () => {
+      if (previewVid.duration > 60) {
+        this.toast('Vídeo deve ter no máximo 60 segundos', 'error');
+        this.selectedFile = null;
+        preview.style.display = 'none';
+      }
+    };
+  }
+
+  addHashtag(tag) {
+    tag = tag.replace(/[^a-zA-Z0-9_\u00C0-\u024F]/g, '').toLowerCase();
+    if (!tag || this.uploadHashtags.includes(tag)) return;
+    if (this.uploadHashtags.length >= 10) { this.toast('Máximo 10 hashtags', 'error'); return; }
+    this.uploadHashtags.push(tag);
+    this.renderHashtags();
+  }
+
+  removeHashtag(tag) {
+    this.uploadHashtags = this.uploadHashtags.filter(h => h !== tag);
+    this.renderHashtags();
+  }
+
+  renderHashtags() {
+    const area = document.getElementById('hashtagArea');
+    const input = document.getElementById('hashtagInput');
+    area.innerHTML = this.uploadHashtags.map(h =>
+      `<div class="hashtag-tag">#${h}<span class="remove" onclick="app.removeHashtag('${h}')">×</span></div>`
+    ).join('') + `<input type="text" id="hashtagInput" placeholder="${this.uploadHashtags.length ? '' : 'Adicionar hashtag...'}" onkeydown="if(event.key==='Enter'){event.preventDefault();app.addHashtag(this.value);this.value=''}">`;
+  }
+
+  async submitVideo() {
+    const title = document.getElementById('vidTitle').value.trim();
+    const desc = document.getElementById('vidDesc').value.trim();
+    if (!title) { this.toast('Adicione um título', 'error'); return; }
+
+    const video = {
+      id: 'v' + Date.now(),
+      userId: this.currentUser.id,
+      isDemo: !this.selectedFile,
+      gradClass: 'grad-' + (1 + Math.floor(Math.random() * 10)),
+      demoIcon: '🎬',
+      videoUrl: null,
+      title, description: desc,
+      hashtags: [...this.uploadHashtags],
+      likes: [], status: 'pending', views: 0,
+      createdAt: Date.now()
+    };
+
+    if (this.selectedFile) {
+      video.isDemo = false;
+      try {
+        await VideoStore.save(video.id, this.selectedFile);
+      } catch(e) {
+        this.toast('Erro ao salvar vídeo', 'error');
+        return;
+      }
+    }
+
+    const videos = DB.getVideos();
+    videos.push(video);
+    DB.setVideos(videos);
+
+    // Notify admins
+    const admins = DB.getUsers().filter(u => u.isAdmin);
+    admins.forEach(admin => {
+      if (admin.id !== this.currentUser.id) {
+        this.addNotification(admin.id, 'pending', this.currentUser.id, video.id);
+      }
+    });
+
+    this.toast('Vídeo enviado! Aguardando aprovação do admin ⏳', 'success');
+    this.resetUploadForm();
+    this.navigateTo('profilePage');
+  }
+
+  // ---- EXPLORE ----
+  renderExplore(searchQuery = '') {
+    const container = document.getElementById('exploreContent');
+    const videos = DB.getVideos().filter(v => v.status === 'approved');
+    const users = DB.getUsers();
+    const allHashtags = [...new Set(videos.flatMap(v => v.hashtags || []))];
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const matchedVideos = videos.filter(v =>
+        v.title.toLowerCase().includes(q) ||
+        v.description.toLowerCase().includes(q) ||
+        (v.hashtags || []).some(h => h.toLowerCase().includes(q))
+      );
+      const matchedUsers = users.filter(u =>
+        u.username.toLowerCase().includes(q) ||
+        (u.bio || '').toLowerCase().includes(q)
+      );
+
+      let html = '';
+      if (matchedUsers.length > 0) {
+        html += `<div class="explore-section"><h3><i class="fas fa-users"></i> Usuários</h3><div class="user-search-results">`;
+        matchedUsers.forEach(u => {
+          const vCount = videos.filter(v => v.userId === u.id).length;
+          html += `<div class="user-search-item" onclick="app.viewProfile('${u.id}')">
+            <div class="avatar">${u.avatar || '👤'}</div>
+            <div class="info"><div class="name">@${u.username} ${u.verified ? '<i class="fas fa-check-circle verified"></i>' : ''}</div><div class="stats">${u.followers.length} seguidores • ${vCount} vídeos</div></div>
+          </div>`;
+        });
+        html += `</div></div>`;
+      }
+
+      if (matchedVideos.length > 0) {
+        html += `<div class="explore-section"><h3><i class="fas fa-video"></i> Vídeos</h3><div class="explore-grid">`;
+        matchedVideos.forEach(v => { html += this.buildExploreCard(v); });
+        html += `</div></div>`;
+      }
+
+      if (!matchedVideos.length && !matchedUsers.length) {
+        html = `<div style="text-align:center;padding:40px;color:var(--text3)"><i class="fas fa-search" style="font-size:2rem;margin-bottom:10px;display:block"></i>Nenhum resultado para "${searchQuery}"</div>`;
+      }
+
+      container.innerHTML = html;
+      return;
+    }
+
+    // Default explore page
+    let html = '';
+
+    // Hashtags
+    if (allHashtags.length > 0) {
+      html += `<div class="explore-section"><h3><i class="fas fa-hashtag"></i> Hashtags em Alta</h3><div class="hashtag-pills">`;
+      allHashtags.slice(0, 15).forEach(h => {
+        html += `<div class="hashtag-pill" onclick="app.searchHashtag('${h}')">#${h}</div>`;
+      });
+      html += `</div></div>`;
+    }
+
+    // Trending (most likes)
+    const trending = [...videos].sort((a, b) => b.likes.length - a.likes.length).slice(0, 9);
+    if (trending.length > 0) {
+      html += `<div class="explore-section"><h3><i class="fas fa-fire"></i> Em Alta</h3><div class="explore-grid">`;
+      trending.forEach(v => { html += this.buildExploreCard(v); });
+      html += `</div></div>`;
+    }
+
+    // Recent
+    const recent = [...videos].sort((a, b) => b.createdAt - a.createdAt).slice(0, 9);
+    if (recent.length > 0) {
+      html += `<div class="explore-section"><h3><i class="fas fa-clock"></i> Recentes</h3><div class="explore-grid">`;
+      recent.forEach(v => { html += this.buildExploreCard(v); });
+      html += `</div></div>`;
+    }
+
+    container.innerHTML = html;
+  }
+
+  buildExploreCard(video) {
+    const u = DB.getUsers().find(x => x.id === video.userId);
+    return `<div class="explore-card" onclick="app.openVideoDetail('${video.id}')">
+      <div class="bg ${video.isDemo ? video.gradClass : 'grad-6'}" style="display:flex;align-items:center;justify-content:center;font-size:2rem">${video.isDemo ? (video.demoIcon || '🎬') : '🎬'}</div>
+      <div class="card-info">
+        <div style="font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${video.title}</div>
+        <div class="views"><i class="fas fa-heart"></i> ${this.formatNum(video.likes.length)} • @${u ? u.username : '?'}</div>
+      </div>
+    </div>`;
+  }
+
+  searchHashtag(tag) {
+    this.navigateTo('explorePage');
+    document.getElementById('searchInput').value = tag;
+    this.renderExplore(tag);
+  }
+
+  async openVideoDetail(videoId) {
+    const video = DB.getVideos().find(v => v.id === videoId);
+    if (!video) return;
+    const detail = document.getElementById('videoDetail');
+    const html = await this.buildFeedItem(video, true);
+    detail.innerHTML = `<div style="position:fixed;top:15px;left:15px;z-index:10"><button onclick="document.getElementById('videoDetail').classList.remove('show')" style="width:35px;height:35px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1rem"><i class="fas fa-arrow-left"></i></button></div><div class="detail-feed">${html}</div>`;
+    detail.classList.add('show');
+    this.setupFeedObserver();
+  }
+
+  // ---- NOTIFICATIONS ----
+  addNotification(userId, type, fromUserId, videoId) {
+    const notifs = DB.getNotifs();
+    // Prevent duplicate
+    const exists = notifs.find(n => n.userId === userId && n.type === type && n.fromUserId === fromUserId && n.videoId === videoId && Date.now() - n.createdAt < 60000);
+    if (exists) return;
+    notifs.unshift({
+      id: 'n' + Date.now() + Math.random().toString(36).substr(2, 5),
+      userId, type, fromUserId, videoId,
+      read: false, createdAt: Date.now()
+    });
+    DB.setNotifs(notifs);
+    this.updateNotifBadge();
+  }
+
+  updateNotifBadge() {
+    if (!this.currentUser) return;
+    const notifs = DB.getNotifs().filter(n => n.userId === this.currentUser.id && !n.read);
+    const badge = document.getElementById('notifBadge');
+    if (notifs.length > 0) {
+      badge.textContent = notifs.length > 99 ? '99+' : notifs.length;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  renderNotifications() {
+    const notifs = DB.getNotifs().filter(n => n.userId === this.currentUser.id).sort((a, b) => b.createdAt - a.createdAt);
+    const users = DB.getUsers();
+
+    // Mark all as read
+    const allNotifs = DB.getNotifs();
+    allNotifs.forEach(n => { if (n.userId === this.currentUser.id) n.read = true; });
+    DB.setNotifs(allNotifs);
+    this.updateNotifBadge();
+
+    if (notifs.length === 0) {
+      document.getElementById('notifList').innerHTML = '<div class="notif-empty"><i class="fas fa-bell-slash"></i>Nenhuma notificação ainda</div>';
+      return;
+    }
+
+    const typeConfig = {
+      like: { icon: 'fas fa-heart', class: 'like', text: 'curtiu seu vídeo' },
+      comment: { icon: 'fas fa-comment', class: 'comment', text: 'comentou no seu vídeo' },
+      follow: { icon: 'fas fa-user-plus', class: 'follow', text: 'começou a te seguir' },
+      approved: { icon: 'fas fa-check-circle', class: 'approved', text: 'Seu vídeo foi aprovado! ✅' },
+      rejected: { icon: 'fas fa-times-circle', class: 'rejected', text: 'Seu vídeo foi rejeitado ❌' },
+      pending: { icon: 'fas fa-clock', class: 'follow', text: 'enviou um vídeo para aprovação' }
+    };
+
+    let html = '';
+    notifs.forEach(n => {
+      const fromUser = users.find(u => u.id === n.fromUserId);
+      const config = typeConfig[n.type] || typeConfig.like;
+      const fromName = fromUser ? `<strong>@${fromUser.username}</strong>` : 'Alguém';
+      let text = n.type === 'approved' || n.type === 'rejected' ? config.text : `${fromName} ${config.text}`;
+
+      html += `<div class="notif-item ${n.read ? '' : 'unread'}" onclick="${n.videoId ? `app.openVideoDetail('${n.videoId}')` : n.fromUserId ? `app.viewProfile('${n.fromUserId}')` : ''}">
+        <div class="notif-icon ${config.class}"><i class="${config.icon}"></i></div>
+        <div class="notif-content"><div class="notif-text">${text}</div><div class="notif-time">${this.timeAgo(n.createdAt)}</div></div>
+      </div>`;
+    });
+
+    document.getElementById('notifList').innerHTML = html;
+  }
+
+  // ---- PROFILE ----
+  renderProfile() {
+    this.refreshUser();
+    const user = this.currentUser;
+    const videos = DB.getVideos().filter(v => v.userId === user.id).sort((a, b) => b.createdAt - a.createdAt);
+    const approvedVids = videos.filter(v => v.status === 'approved');
+    const totalLikes = videos.reduce((sum, v) => sum + v.likes.length, 0);
+
+    let html = `<div class="profile-header">
+      <div class="profile-avatar">${user.avatar || '👤'}</div>
+      <div class="profile-name">${user.username} ${user.verified ? '<i class="fas fa-check-circle verified" style="font-size:.9rem"></i>' : ''}</div>
+      <div class="profile-username">@${user.username}</div>
+      ${user.bio ? `<div class="profile-bio">${this.escapeHtml(user.bio)}</div>` : ''}
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="num">${user.following ? user.following.length : 0}</div><div class="label">Seguindo</div></div>
+        <div class="profile-stat"><div class="num">${user.followers ? user.followers.length : 0}</div><div class="label">Seguidores</div></div>
+        <div class="profile-stat"><div class="num">${this.formatNum(totalLikes)}</div><div class="label">Curtidas</div></div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-outline btn-sm" onclick="app.openEditProfile()"><i class="fas fa-edit"></i> Editar perfil</button>
+        ${user.isAdmin ? `<button class="btn btn-sm" style="background:var(--accent3);color:#fff" onclick="app.navigateTo('adminPage')"><i class="fas fa-shield-alt"></i> Admin</button>` : ''}
+      </div>
+    </div>`;
+
+    html += `<div class="profile-tabs">
+      <div class="profile-tab active" onclick="app.showProfileTab('videos',this)"><i class="fas fa-th"></i> Vídeos</div>
+      <div class="profile-tab" onclick="app.showProfileTab('liked',this)"><i class="fas fa-heart"></i> Curtidos</div>
+    </div>`;
+
+    html += `<div id="profileVideosTab"><div class="profile-grid">`;
+    if (videos.length === 0) {
+      html += `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text3)">Nenhum vídeo ainda</div>`;
+    }
+    videos.forEach(v => {
+      const statusBadge = v.status === 'pending' ? '<div class="status-badge status-pending">Pendente</div>' :
+                          v.status === 'rejected' ? '<div class="status-badge status-rejected">Rejeitado</div>' : '';
+      html += `<div class="profile-video-card" onclick="app.openVideoDetail('${v.id}')">
+        <div class="bg ${v.isDemo ? v.gradClass : 'grad-6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo ? (v.demoIcon || '🎬') : '🎬'}</div>
+        <div class="overlay"><i class="fas fa-heart"></i> ${this.formatNum(v.likes.length)}</div>
+        ${statusBadge}
+      </div>`;
+    });
+    html += `</div></div>`;
+
+    // Liked videos
+    const likedVids = DB.getVideos().filter(v => v.likes.includes(user.id) && v.status === 'approved');
+    html += `<div id="profileLikedTab" style="display:none"><div class="profile-grid">`;
+    if (likedVids.length === 0) {
+      html += `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text3)">Nenhum vídeo curtido</div>`;
+    }
+    likedVids.forEach(v => {
+      html += `<div class="profile-video-card" onclick="app.openVideoDetail('${v.id}')">
+        <div class="bg ${v.isDemo ? v.gradClass : 'grad-6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo ? (v.demoIcon || '🎬') : '🎬'}</div>
+        <div class="overlay"><i class="fas fa-heart"></i> ${this.formatNum(v.likes.length)}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+
+    // Settings
+    html += `<div class="settings-section">
+      <div class="settings-item" onclick="app.openEditProfile()"><div class="left"><i class="fas fa-user-edit"></i><span>Editar Perfil</span></div><div class="right"><i class="fas fa-chevron-right"></i></div></div>
+      ${user.isAdmin ? `<div class="settings-item" onclick="app.navigateTo('adminPage')"><div class="left"><i class="fas fa-shield-alt"></i><span>Painel Admin</span></div><div class="right"><i class="fas fa-chevron-right"></i></div></div>` : ''}
+      <div class="settings-item" onclick="app.logout()"><div class="left"><i class="fas fa-sign-out-alt" style="color:var(--red)"></i><span style="color:var(--red)">Sair</span></div><div class="right"><i class="fas fa-chevron-right"></i></div></div>
+    </div>`;
+
+    document.getElementById('profileContent').innerHTML = html;
+  }
+
+  showProfileTab(tab, el) {
+    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('profileVideosTab').style.display = tab === 'videos' ? 'block' : 'none';
+    document.getElementById('profileLikedTab').style.display = tab === 'liked' ? 'block' : 'none';
+  }
+
+  viewProfile(userId) {
+    if (userId === this.currentUser.id) {
+      this.navigateTo('profilePage');
+      return;
+    }
+    const users = DB.getUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+
+    document.getElementById('otherProfileTitle').textContent = '@' + user.username;
+    const videos = DB.getVideos().filter(v => v.userId === userId && v.status === 'approved').sort((a, b) => b.createdAt - a.createdAt);
+    const totalLikes = videos.reduce((sum, v) => sum + v.likes.length, 0);
+    const isFollowing = this.currentUser.following && this.currentUser.following.includes(userId);
+
+    let html = `<div class="profile-header">
+      <div class="profile-avatar">${user.avatar || '👤'}</div>
+      <div class="profile-name">${user.username} ${user.verified ? '<i class="fas fa-check-circle verified" style="font-size:.9rem"></i>' : ''}</div>
+      <div class="profile-username">@${user.username}</div>
+      ${user.bio ? `<div class="profile-bio">${this.escapeHtml(user.bio)}</div>` : ''}
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="num">${user.following ? user.following.length : 0}</div><div class="label">Seguindo</div></div>
+        <div class="profile-stat"><div class="num">${user.followers ? user.followers.length : 0}</div><div class="label">Seguidores</div></div>
+        <div class="profile-stat"><div class="num">${this.formatNum(totalLikes)}</div><div class="label">Curtidas</div></div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-sm ${isFollowing ? 'btn-outline' : ''}" style="${!isFollowing ? 'background:var(--accent);color:#fff' : ''}" onclick="app.toggleFollow('${userId}',this);app.viewProfile('${userId}')">
+          ${isFollowing ? '<i class="fas fa-user-check"></i> Seguindo' : '<i class="fas fa-user-plus"></i> Seguir'}
+        </button>
+      </div>
+    </div>`;
+
+    html += `<div class="profile-grid">`;
+    if (videos.length === 0) {
+      html += `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text3)">Nenhum vídeo ainda</div>`;
+    }
+    videos.forEach(v => {
+      html += `<div class="profile-video-card" onclick="app.openVideoDetail('${v.id}')">
+        <div class="bg ${v.isDemo ? v.gradClass : 'grad-6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo ? (v.demoIcon || '🎬') : '🎬'}</div>
+        <div class="overlay"><i class="fas fa-heart"></i> ${this.formatNum(v.likes.length)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    document.getElementById('otherProfileContent').innerHTML = html;
+    this.previousPage = this.currentPage;
+    this.currentPage = 'otherProfilePage';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('otherProfilePage').classList.add('active');
+
+    // Close any modals
+    document.getElementById('commentsModal').classList.remove('show');
+    document.getElementById('videoDetail').classList.remove('show');
+  }
+
+  openEditProfile() {
+    document.getElementById('editProfileModal').classList.add('show');
+    document.getElementById('editUsername').value = this.currentUser.username;
+    document.getElementById('editBio').value = this.currentUser.bio || '';
+
+    const picker = document.getElementById('avatarPicker');
+    picker.innerHTML = this.avatars.map(a =>
+      `<div class="avatar-option ${this.currentUser.avatar === a ? 'selected' : ''}" onclick="app.selectAvatar('${a}',this)">${a}</div>`
+    ).join('');
+  }
+
+  closeEditProfile() {
+    document.getElementById('editProfileModal').classList.remove('show');
+  }
+
+  selectAvatar(avatar, el) {
+    document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    this.selectedAvatar = avatar;
+  }
+
+  saveProfile() {
+    const username = document.getElementById('editUsername').value.trim();
+    const bio = document.getElementById('editBio').value.trim();
+    if (!username) { this.toast('Nome de usuário obrigatório', 'error'); return; }
+
+    const users = DB.getUsers();
+    const existing = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.id !== this.currentUser.id);
+    if (existing) { this.toast('Nome de usuário já existe', 'error'); return; }
+
+    const user = users.find(u => u.id === this.currentUser.id);
+    user.username = username;
+    user.bio = bio;
+    if (this.selectedAvatar) user.avatar = this.selectedAvatar;
+    DB.setUsers(users);
+    this.refreshUser();
+    this.closeEditProfile();
+    this.renderProfile();
+    this.toast('Perfil atualizado!', 'success');
+  }
+
+  // ---- ADMIN ----
+  renderAdmin() {
+    if (!this.currentUser.isAdmin) {
+      this.navigateTo('feedPage');
+      this.toast('Acesso não autorizado', 'error');
+      return;
+    }
+
+    const videos = DB.getVideos();
+    const users = DB.getUsers();
+    const pending = videos.filter(v => v.status === 'pending');
+    const approved = videos.filter(v => v.status === 'approved');
+    const rejected = videos.filter(v => v.status === 'rejected');
+
+    let html = `
+    <div class="admin-stats">
+      <div class="admin-stat total"><div class="num">${videos.length}</div><div class="label">Total</div></div>
+      <div class="admin-stat pending"><div class="num">${pending.length}</div><div class="label">Pendentes</div></div>
+      <div class="admin-stat approved"><div class="num">${approved.length}</div><div class="label">Aprovados</div></div>
+      <div class="admin-stat rejected"><div class="num">${rejected.length}</div><div class="label">Rejeitados</div></div>
+    </div>`;
+
+    html += `<div class="admin-filter">
+      <div class="admin-filter-btn active" onclick="app.filterAdmin('all',this)">Todos</div>
+      <div class="admin-filter-btn" onclick="app.filterAdmin('pending',this)">⏳ Pendentes</div>
+      <div class="admin-filter-btn" onclick="app.filterAdmin('approved',this)">✅ Aprovados</div>
+      <div class="admin-filter-btn" onclick="app.filterAdmin('rejected',this)">❌ Rejeitados</div>
+    </div>`;
+
+    html += `<div class="admin-video-list" id="adminVideoList">`;
+    const sorted = [...videos].sort((a, b) => {
+      if (a.status === 'pending' && b.status !== 'pending') return -1;
+      if (b.status === 'pending' && a.status !== 'pending') return 1;
+      return b.createdAt - a.createdAt;
+    });
+
+    sorted.forEach(v => {
+      const u = users.find(x => x.id === v.userId);
+      const statusLabel = v.status === 'pending' ? '⏳ Pendente' : v.status === 'approved' ? '✅ Aprovado' : '❌ Rejeitado';
+
+      html += `<div class="admin-video-card" data-status="${v.status}">
+        <div class="admin-video-top">
+          <div class="admin-video-thumb"><div class="bg ${v.isDemo ? v.gradClass : 'grad-6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo ? (v.demoIcon || '🎬') : '🎬'}</div></div>
+          <div class="admin-video-info">
+            <div class="title">${v.title}</div>
+            <div class="user">@${u ? u.username : '?'} ${u && u.verified ? '<i class="fas fa-check-circle verified"></i>' : ''}</div>
+            <div class="desc">${v.description || 'Sem descrição'}</div>
+            <div class="meta">${statusLabel} • ${this.timeAgo(v.createdAt)} • <i class="fas fa-heart"></i> ${v.likes.length}</div>
+          </div>
+        </div>
+        ${v.status === 'pending' ? `<div class="admin-video-actions">
+          <button class="btn btn-success btn-sm" onclick="app.approveVideo('${v.id}')"><i class="fas fa-check"></i> Aprovar</button>
+          <button class="btn btn-danger btn-sm" onclick="app.rejectVideo('${v.id}')"><i class="fas fa-times"></i> Rejeitar</button>
+        </div>` : ''}
+      </div>`;
+    });
+
+    if (sorted.length === 0) {
+      html += `<div style="text-align:center;padding:30px;color:var(--text3)"><i class="fas fa-inbox" style="font-size:2rem;margin-bottom:10px;display:block"></i>Nenhum vídeo encontrado</div>`;
+    }
+
+    html += `</div>`;
+    document.getElementById('adminContent').innerHTML = html;
+  }
+
+  filterAdmin(status, btn) {
+    document.querySelectorAll('.admin-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.admin-video-card').forEach(card => {
+      if (status === 'all') { card.style.display = 'block'; }
+      else { card.style.display = card.dataset.status === status ? 'block' : 'none'; }
+    });
+  }
+
+  approveVideo(videoId) {
+    const videos = DB.getVideos();
+    const video = videos.find(v => v.id === videoId);
+    if (!video) return;
+    video.status = 'approved';
+    DB.setVideos(videos);
+    this.addNotification(video.userId, 'approved', this.currentUser.id, videoId);
+    this.toast('Vídeo aprovado! ✅', 'success');
+    this.renderAdmin();
+  }
+
+  rejectVideo(videoId) {
+    const videos = DB.getVideos();
+    const video = videos.find(v => v.id === videoId);
+    if (!video) return;
+    video.status = 'rejected';
+    DB.setVideos(videos);
+    this.addNotification(video.userId, 'rejected', this.currentUser.id, videoId);
+    // Remove video blob
+    VideoStore.remove(videoId).catch(() => {});
+    this.toast('Vídeo rejeitado ❌', 'success');
+    this.renderAdmin();
+  }
+
+  // ---- UTILS ----
+  formatNum(n) {
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+    return n.toString();
+  }
+
+  timeAgo(ts) {
+    const diff = Date.now() - ts;
+    const secs = Math.floor(diff / 1000);
+    if (secs < 60) return 'agora';
+    const mins = Math.floor(secs / 60);
+    if (mins < 60) return mins + 'min';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h';
+    const days = Math.floor(hrs / 24);
+    if (days < 30) return days + 'd';
+    const months = Math.floor(days / 30);
+    if (months < 12) return months + 'mês' + (months > 1 ? 'es' : '');
+    return Math.floor(months / 12) + 'a';
+  }
+
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML.replace(/\n/g, '<br>');
+  }
+
+  toast(message, type = '') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>${message}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // ---- EVENT BINDING ----
+  bindEvents() {
+    // Auth tabs
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const isLogin = tab.dataset.tab === 'login';
+        document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+      });
+    });
+
+    // Login
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value;
+      if (!this.login(user, pass)) {
+        const err = document.getElementById('loginError');
+        err.textContent = 'Usuário ou senha incorretos';
+        err.style.display = 'block';
+      }
+    });
+
+    // Register
+    document.getElementById('registerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = document.getElementById('regUser').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const pass = document.getElementById('regPass').value;
+      const passConfirm = document.getElementById('regPassConfirm').value;
+      const errEl = document.getElementById('regError');
+
+      if (pass !== passConfirm) {
+        errEl.textContent = 'As senhas não coincidem';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      const result = this.register(user, email, pass);
+      if (result !== true) {
+        errEl.textContent = result;
+        errEl.style.display = 'block';
+      }
+    });
+
+    // Bottom nav
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const page = item.dataset.page;
+        if (page) this.navigateTo(page);
+      });
+    });
+
+    // Upload area
+    document.getElementById('uploadArea').addEventListener('click', () => {
+      document.getElementById('videoFileInput').click();
+    });
+    document.getElementById('videoFileInput').addEventListener('change', (e) => {
+      this.handleFileSelect(e.target.files[0]);
+    });
+
+    // Submit video
+    document.getElementById('submitVideo').addEventListener('click', () => this.submitVideo());
+
+    // Hashtag input
+    document.getElementById('hashtagArea').addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' && e.key === 'Enter') {
+        e.preventDefault();
+        this.addHashtag(e.target.value);
+        e.target.value = '';
+      }
+    });
+
+    // Comment submit on enter
+    document.getElementById('commentInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); this.submitComment(); }
+    });
+
+    // Search
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        this.renderExplore(e.target.value.trim());
+      }, 300);
+    });
+
+    // Double tap for like on feed
+    document.getElementById('feedContainer').addEventListener('click', (e) => {
+      const overlay = e.target.closest('.play-pause-overlay');
+      if (!overlay) return;
+      const videoId = overlay.dataset.vid;
+      const now = Date.now();
+      if (now - this.lastTap < 300) {
+        this.handleDoubleTap(videoId);
+        this.lastTap = 0;
+      } else {
+        this.lastTap = now;
+        // Toggle play/pause for real videos
+        const feedItem = overlay.closest('.feed-item');
+        const video = feedItem.querySelector('video');
+        if (video) {
+          if (video.paused) {
+            video.play();
+            document.getElementById('playIcon_' + videoId).classList.remove('show');
+          } else {
+            video.pause();
+            document.getElementById('playIcon_' + videoId).classList.add('show');
+          }
+        }
+      }
+    });
+
+    // Handle drag and drop for upload
+    const uploadArea = document.getElementById('uploadArea');
+    uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--accent)'; });
+    uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = 'var(--bg5)'; });
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = 'var(--bg5)';
+      if (e.dataTransfer.files.length) this.handleFileSelect(e.dataTransfer.files[0]);
+    });
+  }
+}
+
+// ==================== INIT ====================
+const app = new App();
+document.addEventListener('DOMContentLoaded', () => app.init());
+
+// Add video detail container to body
+const videoDetailDiv = document.createElement('div');
+videoDetailDiv.id = 'videoDetail';
+document.body.appendChild(videoDetailDiv);
+</script>
+</body>
+</html>
