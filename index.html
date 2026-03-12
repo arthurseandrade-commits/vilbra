@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Vilbra</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300D4FF'/%3E%3Cstop offset='100%25' stop-color='%23FF2D9A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='40' height='40' rx='11' fill='url(%23g)'/%3E%3Cpath d='M12 12L20 28L28 12' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<link rel="icon" href="imagens/logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -27,14 +27,15 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 /* SPLASH */
 #splash{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
 #splash.hide{opacity:0;pointer-events:none}
-.splash-mark{margin-bottom:18px}
+.splash-logo{width:64px;height:64px;margin-bottom:14px;border-radius:16px;animation:logoPulse 2s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 10px rgba(0,212,255,.3))}50%{filter:drop-shadow(0 0 25px rgba(255,45,154,.5))}}
 .splash-name{font-size:2.2rem;font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
 .splash-sub{color:var(--text3);font-size:.8rem;margin-bottom:22px}
 .splash-spin{width:38px;height:38px;border:3px solid var(--bg4);border-top-color:var(--blue);border-right-color:var(--pink);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* SVG LOGO */
-.logo-mark{display:inline-block;vertical-align:middle}
+/* LOGO STYLES */
+.logo-img{border-radius:8px;object-fit:contain}
 .logo-full{display:inline-flex;align-items:center;gap:8px}
 .logo-name{font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
@@ -57,7 +58,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .auth-tab.active{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff}
 .fg{margin-bottom:12px}
 .fg label{display:block;margin-bottom:4px;font-size:.78rem;color:var(--text2);font-weight:500}
-.fg input,.fg textarea,.fg select{width:100%;padding:10px 14px;background:var(--bg4);border:1px solid var(--bg5);border-radius:var(--r);color:var(--text);font-size:.88rem;transition:var(--t)}
+.fg input,.fg textarea{width:100%;padding:10px 14px;background:var(--bg4);border:1px solid var(--bg5);border-radius:var(--r);color:var(--text);font-size:.88rem;transition:var(--t)}
 .fg input:focus,.fg textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,212,255,.08)}
 .fg input:disabled{opacity:.5;cursor:not-allowed}
 .fg .hint{font-size:.7rem;color:var(--text3);margin-top:3px}
@@ -72,6 +73,9 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .btn-no{background:var(--red);color:#fff}
 .btn-g{width:100%;padding:10px;background:#fff;color:#333;border-radius:var(--r);font-weight:600;font-size:.84rem;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;transition:var(--t)}
 .btn-g:hover{background:#f0f0f0}
+.btn-verify{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;width:100%;box-shadow:var(--gB)}
+.btn-verify:hover{transform:translateY(-1px)}
+.btn-verify:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .auth-div{display:flex;align-items:center;gap:12px;margin:14px 0;color:var(--text3);font-size:.78rem}
 .auth-div::before,.auth-div::after{content:'';flex:1;height:1px;background:var(--bg5)}
 .auth-err{color:var(--red);font-size:.76rem;margin-top:4px;display:none}
@@ -182,7 +186,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .nico.follow{background:rgba(139,92,246,.1);color:var(--purple)}
 .nico.approved{background:rgba(0,230,118,.1);color:var(--green)}
 .nico.rejected{background:rgba(255,23,68,.1);color:var(--red)}
-.nico.avatar{background:rgba(255,145,0,.1);color:var(--orange)}
+.nico.verify{background:rgba(0,212,255,.1);color:var(--blue)}
 .nc{flex:1}
 .nc .nt{font-size:.8rem;line-height:1.3}
 .nc .nt strong{color:var(--text)}
@@ -204,7 +208,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .p-stat{text-align:center}
 .p-stat .n{font-size:1.1rem;font-weight:700}
 .p-stat .l{font-size:.66rem;color:var(--text2)}
-.p-acts{display:flex;justify-content:center;gap:8px;margin-bottom:18px}
+.p-acts{display:flex;justify-content:center;gap:8px;margin-bottom:18px;flex-wrap:wrap}
 .p-tabs{display:flex;border-bottom:1px solid var(--bg4)}
 .p-tab{flex:1;padding:11px;text-align:center;font-size:.82rem;color:var(--text2);transition:var(--t);cursor:pointer}
 .p-tab.active{color:var(--blue);border-bottom:2px solid var(--blue)}
@@ -221,9 +225,22 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .sitem:hover{background:var(--bg4);border-color:var(--bg5)}
 .sitem .sl{display:flex;align-items:center;gap:11px;font-size:.86rem}
 .sitem .sl i{width:18px;text-align:center;color:var(--blue)}
-.sitem .sr2{color:var(--text3);font-size:.82rem}
+.sitem .sr2{color:var(--text3);font-size:.82rem;display:flex;align-items:center;gap:6px}
+.sitem .sr2 .badge-sm{font-size:.6rem;padding:2px 6px;border-radius:var(--r3);font-weight:700}
 .anon-box{text-align:center;padding:40px 20px}
 .anon-box i{font-size:2.5rem;margin-bottom:14px;display:block;background:linear-gradient(135deg,var(--blue),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* VERIFY REQUEST */
+.verify-card{background:var(--bg3);border-radius:var(--r2);padding:20px;margin:15px;border:1px solid var(--bg4);text-align:center}
+.verify-card h4{font-size:1rem;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.verify-card p{font-size:.8rem;color:var(--text2);margin-bottom:14px;line-height:1.4}
+.verify-perks{text-align:left;margin-bottom:16px}
+.verify-perk{display:flex;align-items:center;gap:8px;font-size:.8rem;padding:6px 0;color:var(--text2)}
+.verify-perk i{color:var(--green);font-size:.7rem;width:16px;text-align:center}
+.verify-status{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:var(--r);font-size:.85rem;font-weight:600}
+.verify-status.pending{background:rgba(255,145,0,.1);color:var(--orange)}
+.verify-status.verified{background:rgba(0,212,255,.1);color:var(--blue)}
+.verify-status.rejected{background:rgba(255,23,68,.1);color:var(--red)}
 
 /* ADMIN */
 #adminPage{overflow-y:auto;padding:14px;padding-top:68px}
@@ -245,7 +262,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .a-card-th .bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
 .a-card-i{flex:1;display:flex;flex-direction:column;gap:3px}
 .a-card-i .t{font-weight:600;font-size:.86rem}
-.a-card-i .u{font-size:.73rem;color:var(--text2)}
+.a-card-i .u{font-size:.73rem;color:var(--text2);display:flex;align-items:center;gap:4px}
 .a-card-i .d{font-size:.7rem;color:var(--text3);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .a-card-i .m{font-size:.66rem;color:var(--text3);margin-top:auto}
 .a-card-a{display:flex;gap:6px;padding:0 10px 10px}
@@ -254,9 +271,17 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .a-av-card .avp{width:55px;height:55px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--orange)}
 .a-av-card .avp img{width:100%;height:100%;object-fit:cover}
 .a-av-card .avi{flex:1}
-.a-av-card .avi .n{font-weight:600;font-size:.82rem}
+.a-av-card .avi .n{font-weight:600;font-size:.82rem;display:flex;align-items:center;gap:4px}
 .a-av-card .avi .d{font-size:.68rem;color:var(--text3)}
 .a-av-card .ava{display:flex;gap:5px}
+/* Admin verify requests */
+.a-vr-card{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--bg4);margin-bottom:6px}
+.a-vr-card .vra{width:45px;height:45px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg5);flex-shrink:0}
+.a-vr-card .vra img{width:100%;height:100%;object-fit:cover}
+.a-vr-card .vri{flex:1}
+.a-vr-card .vri .n{font-weight:600;font-size:.82rem;display:flex;align-items:center;gap:4px}
+.a-vr-card .vri .d{font-size:.68rem;color:var(--text3)}
+.a-vr-card .vra2{display:flex;gap:5px}
 
 /* MODALS */
 .modal{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;justify-content:flex-end}
@@ -352,7 +377,6 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 .page{left:50%;transform:translateX(-50%);max-width:500px;right:auto;width:100%}
 .modal-box{max-width:500px;margin:0 auto}
 #vDetail{left:50%;transform:translateX(-50%);max-width:500px;right:auto;width:100%}
-.auth-box{max-width:400px}
 }
 </style>
 </head>
@@ -360,7 +384,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="splash-mark"><svg viewBox="0 0 40 40" width="52" height="52"><defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="50%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#FF2D9A"/></linearGradient></defs><rect width="40" height="40" rx="11" fill="url(#sg)"/><path d="M12 11 L20 29 L28 11" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  <img src="imagens/logo.png" class="splash-logo" width="64" height="64" alt="Vilbra">
   <div class="splash-name">Vilbra</div>
   <div class="splash-sub">Descubra vídeos incríveis</div>
   <div class="splash-spin"></div>
@@ -368,7 +392,6 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 
 <div class="toast-c" id="toasts"></div>
 
-<!-- FLOAT LOGIN -->
 <div id="floatLogin"><button onclick="V.showAuth()"><i class="fas fa-user-circle"></i> Entrar</button></div>
 
 <!-- AUTH -->
@@ -376,7 +399,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
   <div class="auth-bg" onclick="V.closeAuth()"></div>
   <div class="auth-box">
     <button class="auth-close" onclick="V.closeAuth()"><i class="fas fa-times"></i></button>
-    <div class="auth-logo"><div class="logo-full" style="justify-content:center"><svg viewBox="0 0 40 40" width="36" height="36"><defs><linearGradient id="alg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="50%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#FF2D9A"/></linearGradient></defs><rect width="40" height="40" rx="11" fill="url(#alg)"/><path d="M12 11 L20 29 L28 11" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo-name" style="font-size:1.8rem">Vilbra</span></div></div>
+    <div class="auth-logo"><div class="logo-full" style="justify-content:center"><img src="imagens/logo.png" class="logo-img" width="36" height="36" alt="Vilbra"><span class="logo-name" style="font-size:1.8rem">Vilbra</span></div></div>
     <div class="auth-sub">Entre para curtir, comentar e compartilhar</div>
     <button class="btn-g" onclick="V.googleLogin()">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -385,13 +408,13 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
     <div class="auth-div">ou</div>
     <div class="auth-tabs"><div class="auth-tab active" data-t="login">Entrar</div><div class="auth-tab" data-t="reg">Cadastrar</div></div>
     <form id="loginForm">
-      <div class="fg"><label>Email ou Nome Único</label><input type="text" id="lUser" placeholder="Seu email ou @nome" required></div>
+      <div class="fg"><label>Email ou @nome</label><input type="text" id="lUser" placeholder="Seu email ou nome único" required></div>
       <div class="fg"><label>Senha</label><input type="password" id="lPass" placeholder="Sua senha" required></div>
       <div class="auth-err" id="lErr"></div>
       <button type="submit" class="btn btn-p" style="margin-top:6px"><i class="fas fa-sign-in-alt"></i> Entrar</button>
     </form>
     <form id="regForm" style="display:none">
-      <div class="fg"><label>Nome Único (@handle)</label><input type="text" id="rUser" placeholder="seu_nome" required pattern="[a-zA-Z0-9_]+" title="Apenas letras, números e _"></div>
+      <div class="fg"><label>Nome Único (@handle)</label><input type="text" id="rUser" placeholder="seu_nome" required></div>
       <div class="fg"><label>Apelido</label><input type="text" id="rName" placeholder="Como quer ser chamado(a)"></div>
       <div class="fg"><label>Email</label><input type="email" id="rEmail" placeholder="email@exemplo.com" required></div>
       <div class="fg"><label>Senha</label><input type="password" id="rPass" placeholder="Mínimo 6 caracteres" required></div>
@@ -406,7 +429,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
 <div id="app">
   <div class="page active" id="feedPage">
     <div class="feed-hdr">
-      <div class="logo-full"><svg viewBox="0 0 40 40" width="28" height="28"><defs><linearGradient id="flg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="50%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#FF2D9A"/></linearGradient></defs><rect width="40" height="40" rx="11" fill="url(#flg)"/><path d="M12 11 L20 29 L28 11" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="logo-name" style="font-size:1.2rem">Vilbra</span></div>
+      <div class="logo-full"><img src="imagens/logo.png" class="logo-img" width="28" height="28" alt="Vilbra"><span class="logo-name" style="font-size:1.2rem">Vilbra</span></div>
     </div>
     <div class="fc" id="feedCont"></div>
   </div>
@@ -421,7 +444,7 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
     <div class="up-pv" id="upPv"><video id="pvVid" controls></video></div>
     <div class="fg"><label>Título</label><input type="text" id="vTitle" placeholder="Título do vídeo" maxlength="100"></div>
     <div class="fg"><label>Descrição</label><textarea id="vDesc" placeholder="Descreva..." rows="3" style="resize:none"></textarea></div>
-    <div class="fg"><label>Hashtags (Enter para adicionar)</label><div class="tag-area" id="tagArea"><input type="text" id="tagIn" placeholder="Adicionar hashtag..."></div></div>
+    <div class="fg"><label>Hashtags (Enter)</label><div class="tag-area" id="tagArea"><input type="text" id="tagIn" placeholder="Adicionar hashtag..."></div></div>
     <button class="btn btn-p" id="subVid" style="margin-top:8px"><i class="fas fa-paper-plane"></i> Enviar para aprovação</button>
   </div>
   <div class="page" id="notPage">
@@ -460,10 +483,31 @@ button{cursor:pointer;background:none}a{text-decoration:none;color:inherit}img{d
   <div id="avEmojiSec" style="display:none"><div class="emoji-grid" id="emoPicker"></div></div>
   <div id="avDefaultSec" style="display:none"><p style="margin-bottom:8px">Avatar gerado com sua inicial</p><div id="defAvPv" style="width:70px;height:70px;border-radius:50%;margin:0 auto;overflow:hidden"></div></div>
 </div>
-<div class="fg"><label>Apelido (nome visível)</label><input type="text" id="edName" placeholder="Como quer ser chamado(a)"><div class="hint">Pode ser igual ao de outros usuários</div></div>
-<div class="fg"><label>Nome Único (@handle)</label><input type="text" id="edHandle" pattern="[a-zA-Z0-9_]+"><div class="hint" id="handleHint">Único. Pode trocar a cada 30 dias</div></div>
+<div class="fg"><label>Apelido (nome visível)</label><input type="text" id="edName" placeholder="Como quer ser chamado(a)"><div class="hint">Pode ser igual ao de outros</div></div>
+<div class="fg"><label>Nome Único (@handle)</label><input type="text" id="edHandle" pattern="[a-zA-Z0-9_]+"><div class="hint" id="handleHint">Único. Troca a cada 30 dias</div></div>
 <div class="fg"><label>Bio</label><textarea id="edBio" rows="3" style="resize:none" placeholder="Conte sobre você..."></textarea></div>
 <button class="btn btn-p" onclick="V.saveProfile()"><i class="fas fa-check"></i> Salvar</button>
+</div></div>
+
+<!-- VERIFY REQUEST -->
+<div class="modal" id="verifyModal"><div class="modal-bg" onclick="V.closeM('verifyModal')"></div><div class="modal-box" style="padding:20px">
+  <div class="m-hdr"><h3><i class="fas fa-check-circle" style="color:var(--blue)"></i> Verificação</h3><button onclick="V.closeM('verifyModal')"><i class="fas fa-times"></i></button></div>
+  <div style="padding:15px 0">
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:3rem;margin-bottom:8px">✨</div>
+      <h4 style="font-size:1rem;margin-bottom:6px">Solicitar Verificação</h4>
+      <p style="font-size:.8rem;color:var(--text2)">O selo verificado mostra que sua conta é autêntica</p>
+    </div>
+    <div class="verify-perks">
+      <div class="verify-perk"><i class="fas fa-check"></i> Selo de verificado <i class="fas fa-check-circle verified"></i> no perfil</div>
+      <div class="verify-perk"><i class="fas fa-check"></i> Prioridade na aprovação de vídeos</div>
+      <div class="verify-perk"><i class="fas fa-check"></i> Destaque na busca e explorar</div>
+      <div class="verify-perk"><i class="fas fa-check"></i> Confiança da comunidade</div>
+    </div>
+    <div class="fg"><label>Por que você merece ser verificado?</label><textarea id="verifyReason" rows="3" style="resize:none" placeholder="Conte um pouco sobre você e seu conteúdo..."></textarea></div>
+    <div id="verifyStatusArea"></div>
+    <button class="btn btn-verify" id="verifySubmitBtn" onclick="V.submitVerify()"><i class="fas fa-paper-plane"></i> Enviar Solicitação</button>
+  </div>
 </div></div>
 
 <!-- REPORT -->
@@ -476,7 +520,6 @@ const ADMIN_EMAIL='arthurseandrade@gmail.com';
 const G_CLIENT='990622112342-63jj23kj8tv13m1qt770ojn0hqb2ib3v.apps.googleusercontent.com';
 const DAYS30=30*24*60*60*1000;
 
-// ==== DB ====
 const D={
 g(k){try{return JSON.parse(localStorage.getItem('vb_'+k))}catch{return null}},
 s(k,v){localStorage.setItem('vb_'+k,JSON.stringify(v))},
@@ -487,7 +530,6 @@ nots(){return this.g('nots')||[]},sN(n){this.s('nots',n)},
 sess(){return this.g('sess')},sS(s){this.s('sess',s)}
 };
 
-// ==== IndexedDB ====
 const S={db:null,
 open(){return new Promise((r,j)=>{const q=indexedDB.open('VilbraStore',1);q.onupgradeneeded=e=>e.target.result.createObjectStore('b');q.onsuccess=e=>{this.db=e.target.result;r()};q.onerror=j})},
 put(id,b){return new Promise((r,j)=>{const t=this.db.transaction('b','readwrite');t.objectStore('b').put(b,id);t.oncomplete=r;t.onerror=j})},
@@ -495,7 +537,6 @@ get(id){return new Promise((r,j)=>{const t=this.db.transaction('b','readonly');c
 del(id){return new Promise((r,j)=>{const t=this.db.transaction('b','readwrite');t.objectStore('b').delete(id);t.oncomplete=r;t.onerror=j})}
 };
 
-// ==== APP ====
 const V={
 user:null,pg:'feedPage',prev:'feedPage',curVid:null,
 tags:[],selFile:null,blobs:{},lastTap:0,
@@ -503,38 +544,24 @@ selAv:null,avFile:null,avType:'photo',
 emojis:['😀','😎','🤩','🥳','😇','🤗','🧑','👩','👨','👧','🦊','🐱','🐶','🦄','🐼','🦋','🌸','⭐','🔥','💎','🎵','🎮','🏀','🎨','🌈','🎭','🌙','☀️','🍀','🎪'],
 
 async init(){
-  await S.open();
-  this.migrate();
-  this.bind();
+  await S.open();this.migrate();this.bind();
   const s=D.sess();
   if(s){const u=D.users().find(x=>x.id===s);if(u){this.user=u;this.updateNav()}}
   this.showApp();
   setTimeout(()=>document.getElementById('splash').classList.add('hide'),900);
 },
 
-// ---- MIGRATE ----
 migrate(){
   const ver=D.g('ver')||0;
-  if(ver>=4)return;
-  let users=D.users();let vids=D.vids();let cmts=D.cmts();let nots=D.nots();
-  // Remove old demo data
-  const demoU=['u0','u1','u2','u3','u4','u5'];
-  const demoV=['v1','v2','v3','v4','v5','v6','v7','v8'];
-  const sess=D.sess();
-  // Keep session user even if demo ID
-  users=users.filter(u=>!demoU.includes(u.id)||u.id===sess||u.email===ADMIN_EMAIL);
-  vids=vids.filter(v=>!demoV.includes(v.id));
-  const uids=new Set(users.map(u=>u.id));
-  cmts=cmts.filter(c=>{const v=vids.find(x=>x.id===c.videoId);return v&&uids.has(c.userId)});
-  nots=nots.filter(n=>uids.has(n.userId));
-  vids.forEach(v=>{v.likes=(v.likes||[]).filter(id=>uids.has(id))});
-  // Ensure admin
+  if(ver>=5)return;
+  let users=D.users();
+  // Ensure admin exists
   let admin=users.find(u=>u.email===ADMIN_EMAIL);
   if(!admin){
-    admin={id:'adm_'+Date.now(),username:'arthurss',displayName:'Arthur',email:ADMIN_EMAIL,password:'admin123',avatarType:'default',avatar:'🛡️',avatarImg:null,avatarStatus:'none',bio:'Criador do Vilbra ✨',followers:[],following:[],verified:true,lastUsernameChange:0,createdAt:Date.now()};
+    admin={id:'adm_'+Date.now(),username:'arthurss',displayName:'Arthur',email:ADMIN_EMAIL,password:'admin123',avatarType:'default',avatar:null,avatarImg:null,avatarStatus:'none',bio:'Criador do Vilbra ✨',followers:[],following:[],verified:true,verifyStatus:'verified',verifyReason:'',lastUsernameChange:0,createdAt:Date.now()};
     users.push(admin);
   }
-  // Add new fields
+  // Add new fields to all users
   users.forEach(u=>{
     if(!u.displayName)u.displayName=u.username;
     if(u.lastUsernameChange===undefined)u.lastUsernameChange=0;
@@ -542,14 +569,20 @@ migrate(){
     if(!u.avatarStatus)u.avatarStatus='none';
     if(!u.followers)u.followers=[];
     if(!u.following)u.following=[];
-    u.followers=u.followers.filter(id=>uids.has(id));
-    u.following=u.following.filter(id=>uids.has(id));
-    if(u.email===ADMIN_EMAIL)u.verified=true;
+    // Verify system
+    if(!u.verifyStatus)u.verifyStatus=u.verified?'verified':'none';
+    if(!u.verifyReason)u.verifyReason='';
+    if(u.email===ADMIN_EMAIL){u.verified=true;u.verifyStatus='verified'}
   });
-  D.sU(users);D.sV(vids);D.sC(cmts);D.sN(nots);D.s('ver',4);
+  // Clean refs
+  const uids=new Set(users.map(u=>u.id));
+  users.forEach(u=>{u.followers=u.followers.filter(id=>uids.has(id));u.following=u.following.filter(id=>uids.has(id))});
+  let vids=D.vids();vids.forEach(v=>{v.likes=(v.likes||[]).filter(id=>uids.has(id))});
+  let cmts=D.cmts().filter(c=>uids.has(c.userId)&&vids.find(v=>v.id===c.videoId));
+  let nots=D.nots().filter(n=>uids.has(n.userId));
+  D.sU(users);D.sV(vids);D.sC(cmts);D.sN(nots);D.s('ver',5);
 },
 
-// ---- DEFAULT AVATAR ----
 defAvatar(name){
   const gs=[['#FF2D9A','#8B5CF6'],['#00D4FF','#8B5CF6'],['#FF2D9A','#00D4FF'],['#FF6B6B','#FFE66D'],['#A8E6CF','#00D4FF'],['#DDA0DD','#FF2D9A'],['#00D4FF','#00E676'],['#FF9A9E','#FECFEF'],['#667eea','#764ba2'],['#f093fb','#f5576c']];
   const h=(name||'U').split('').reduce((a,c)=>a+c.charCodeAt(0),0);
@@ -558,118 +591,71 @@ defAvatar(name){
   return`data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient></defs><rect width="200" height="200" rx="100" fill="url(#g)"/><text x="100" y="100" text-anchor="middle" dy=".35em" font-family="Inter,sans-serif" font-size="85" font-weight="700" fill="white">${L}</text></svg>`)}`;
 },
 
-// ---- AVATAR HTML ----
 avHtml(user,sz=42){
   if(!user)return`<img src="${this.defAvatar('?')}" style="width:${sz}px;height:${sz}px;border-radius:50%">`;
-  // Approved image
   if(user.avatarType==='image'&&user.avatarImg&&user.avatarStatus==='approved')
     return`<img src="${user.avatarImg}" style="width:${sz}px;height:${sz}px;object-fit:cover;border-radius:50%">`;
-  // Self pending image
   if(this.user&&user.id===this.user.id&&user.avatarType==='image'&&user.avatarImg&&user.avatarStatus==='pending')
     return`<img src="${user.avatarImg}" style="width:${sz}px;height:${sz}px;object-fit:cover;border-radius:50%;opacity:.7">`;
-  // Emoji
   if(user.avatarType==='emoji'&&user.avatar)
     return`<span style="font-size:${sz*.55}px">${user.avatar}</span>`;
-  // Default (generated)
   return`<img src="${this.defAvatar(user.displayName||user.username)}" style="width:${sz}px;height:${sz}px;border-radius:50%">`;
 },
 
-// ---- AUTH ----
 get isAnon(){return!this.user},
 get isAdmin(){return this.user&&this.user.email===ADMIN_EMAIL},
-
 requireAuth(){if(this.isAnon){this.showAuth();return false}return true},
 showAuth(){document.getElementById('authModal').classList.add('show')},
 closeAuth(){document.getElementById('authModal').classList.remove('show')},
-
-showApp(){
-  document.getElementById('app').classList.add('show');
-  this.updateNav();this.nav('feedPage');this.updateBadge();
-},
-
+showApp(){document.getElementById('app').classList.add('show');this.updateNav();this.nav('feedPage');this.updateBadge()},
 updateNav(){document.getElementById('floatLogin').classList.toggle('show',this.isAnon)},
 
 login(id,pw){
   const u=D.users().find(x=>(x.username.toLowerCase()===id.toLowerCase()||x.email.toLowerCase()===id.toLowerCase())&&x.password===pw);
   if(!u)return false;
   this.user=u;D.sS(u.id);this.closeAuth();this.updateNav();this.updateBadge();
-  this.toast(`Bem-vindo, ${u.displayName||u.username}!`,'success');
-  this.nav(this.pg);return true;
+  this.toast(`Bem-vindo, ${u.displayName||u.username}!`,'success');this.nav(this.pg);return true;
 },
 
 register(username,displayName,email,pw){
   const users=D.users();
   const uname=username.toLowerCase().replace(/[^a-z0-9_]/g,'');
-  if(!uname||uname.length<3)return'Nome único deve ter pelo menos 3 caracteres';
+  if(!uname||uname.length<3)return'Nome único: mín 3 caracteres';
   if(users.find(u=>u.username.toLowerCase()===uname))return'Nome único já existe';
   if(users.find(u=>u.email.toLowerCase()===email.toLowerCase()))return'Email já cadastrado';
   if(pw.length<6)return'Senha: mínimo 6 caracteres';
-  const u={
-    id:'u'+Date.now(),username:uname,displayName:displayName||uname,email,password:pw,
-    avatarType:'default',avatar:null,avatarImg:null,avatarStatus:'none',
-    bio:'',followers:[],following:[],verified:false,
-    lastUsernameChange:Date.now(),createdAt:Date.now()
-  };
+  const u={id:'u'+Date.now(),username:uname,displayName:displayName||uname,email,password:pw,avatarType:'default',avatar:null,avatarImg:null,avatarStatus:'none',bio:'',followers:[],following:[],verified:false,verifyStatus:'none',verifyReason:'',lastUsernameChange:Date.now(),createdAt:Date.now()};
   users.push(u);D.sU(users);
   this.user=u;D.sS(u.id);this.closeAuth();this.updateNav();
-  this.toast(`Conta criada! Bem-vindo(a)!`,'success');
-  this.nav(this.pg);return true;
+  this.toast('Conta criada! Bem-vindo(a)!','success');this.nav(this.pg);return true;
 },
 
 googleLogin(){
   try{
     if(typeof google!=='undefined'&&google.accounts){
-      google.accounts.id.initialize({client_id:G_CLIENT,callback:r=>this.gCallback(r)});
-      google.accounts.id.prompt(n=>{
-        if(n.isNotDisplayed()||n.isSkippedMoment())this.gFallback();
-      });
-    }else this.gFallback();
-  }catch(e){this.gFallback()}
+      google.accounts.id.initialize({client_id:G_CLIENT,callback:r=>this.gCb(r)});
+      google.accounts.id.prompt(n=>{if(n.isNotDisplayed&&n.isNotDisplayed()||n.isSkippedMoment&&n.isSkippedMoment())this.gFb()});
+    }else this.gFb();
+  }catch{this.gFb()}
 },
-
-gCallback(r){
-  try{const p=JSON.parse(atob(r.credential.split('.')[1]));this.gProcess(p.email,p.name,p.picture)}catch(e){this.toast('Erro no login Google','error')}
-},
-
-gFallback(){
-  const email=prompt('Digite seu email Google:');
-  if(!email||!email.includes('@'))return;
-  this.gProcess(email,email.split('@')[0],null);
-},
-
-gProcess(email,name,pic){
-  const users=D.users();
-  let u=users.find(x=>x.email.toLowerCase()===email.toLowerCase());
-  if(u){
-    this.user=u;D.sS(u.id);this.closeAuth();this.updateNav();this.updateBadge();
-    this.toast(`Bem-vindo de volta, ${u.displayName||u.username}!`,'success');
-  }else{
+gCb(r){try{const p=JSON.parse(atob(r.credential.split('.')[1]));this.gProc(p.email,p.name,p.picture)}catch{this.toast('Erro no login Google','error')}},
+gFb(){const e=prompt('Digite seu email Google:');if(!e||!e.includes('@'))return;this.gProc(e,e.split('@')[0],null)},
+gProc(email,name,pic){
+  const users=D.users();let u=users.find(x=>x.email.toLowerCase()===email.toLowerCase());
+  if(u){this.user=u;D.sS(u.id);this.closeAuth();this.updateNav();this.updateBadge();this.toast(`Bem-vindo de volta!`,'success')}
+  else{
     let uname=name.toLowerCase().replace(/[^a-z0-9_]/g,'_').substring(0,20);
     let c=1;while(users.find(x=>x.username===uname)){uname=uname.replace(/_?\d*$/,'')+c;c++}
-    u={
-      id:'u'+Date.now(),username:uname,displayName:name||uname,email,
-      password:Math.random().toString(36).slice(2,10),
-      avatarType:pic?'image':'default',avatar:null,
-      avatarImg:pic||null,avatarStatus:pic?'approved':'none',
-      bio:'',followers:[],following:[],verified:email===ADMIN_EMAIL,
-      lastUsernameChange:Date.now(),createdAt:Date.now()
-    };
-    users.push(u);D.sU(users);
-    this.user=u;D.sS(u.id);this.closeAuth();this.updateNav();
-    this.toast(`Conta criada via Google!`,'success');
+    u={id:'u'+Date.now(),username:uname,displayName:name||uname,email,password:Math.random().toString(36).slice(2,10),avatarType:pic?'image':'default',avatar:null,avatarImg:pic||null,avatarStatus:pic?'approved':'none',bio:'',followers:[],following:[],verified:email===ADMIN_EMAIL,verifyStatus:email===ADMIN_EMAIL?'verified':'none',verifyReason:'',lastUsernameChange:Date.now(),createdAt:Date.now()};
+    users.push(u);D.sU(users);this.user=u;D.sS(u.id);this.closeAuth();this.updateNav();
+    this.toast('Conta criada via Google!','success');
   }
   this.nav(this.pg);
 },
 
-logout(){
-  this.user=null;D.sS(null);
-  Object.values(this.blobs).forEach(u=>URL.revokeObjectURL(u));this.blobs={};
-  this.updateNav();this.nav('feedPage');this.toast('Você saiu','info');
-},
-
+logout(){this.user=null;D.sS(null);Object.values(this.blobs).forEach(u=>URL.revokeObjectURL(u));this.blobs={};this.updateNav();this.nav('feedPage');this.toast('Você saiu','info')},
 refresh(){if(this.user)this.user=D.users().find(u=>u.id===this.user.id)},
 
-// ---- NAV ----
 nav(pg){
   this.prev=this.pg;this.pg=pg;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -678,22 +664,20 @@ nav(pg){
   const ni=document.querySelector(`.ni[data-p="${pg}"]`);if(ni)ni.classList.add('active');
   this.refresh();
   switch(pg){
-    case'feedPage':this.renderFeed();break;
-    case'expPage':this.renderExp();break;
+    case'feedPage':this.renderFeed();break;case'expPage':this.renderExp();break;
     case'upPage':if(!this.requireAuth())return this.nav(this.prev);this.resetUp();break;
     case'notPage':if(!this.requireAuth())return this.nav(this.prev);this.renderNots();break;
-    case'profPage':if(this.isAnon){document.getElementById('profCont').innerHTML='<div class="anon-box"><i class="fas fa-user-circle"></i><p>Entre para ver seu perfil e interagir</p><button class="btn btn-p" style="max-width:240px;margin:0 auto" onclick="V.showAuth()"><i class="fas fa-sign-in-alt"></i> Entrar no Vilbra</button></div>';return}this.renderProf();break;
+    case'profPage':if(this.isAnon){document.getElementById('profCont').innerHTML='<div class="anon-box"><i class="fas fa-user-circle"></i><p>Entre para ver seu perfil</p><button class="btn btn-p" style="max-width:240px;margin:0 auto" onclick="V.showAuth()"><i class="fas fa-sign-in-alt"></i> Entrar</button></div>';return}this.renderProf();break;
     case'adminPage':if(!this.isAdmin)return this.nav('feedPage');this.renderAdmin();break;
   }
 },
-
 goBack(){this.nav(this.prev||'feedPage')},
 
 // ---- FEED ----
 async renderFeed(){
   const c=document.getElementById('feedCont');
   const vs=D.vids().filter(v=>v.status==='approved').sort((a,b)=>b.createdAt-a.createdAt);
-  if(!vs.length){c.innerHTML='<div class="feed-empty"><i class="fas fa-video-slash"></i><p>Nenhum vídeo ainda</p><p style="font-size:.78rem">Seja o primeiro a postar!</p></div>';return}
+  if(!vs.length){c.innerHTML='<div class="feed-empty"><i class="fas fa-video-slash"></i><p>Nenhum vídeo ainda</p></div>';return}
   let h='';for(const v of vs)h+=await this.buildFI(v);
   c.innerHTML=h;this.obsVids();
 },
@@ -707,173 +691,76 @@ async buildFI(v,det=false){
   let bg;
   if(v.isDemo){
     const pts=Array.from({length:5},()=>{const s=20+Math.random()*60;return`<div class="pt" style="width:${s}px;height:${s}px;left:${Math.random()*80}%;top:${Math.random()*80}%;animation-duration:${4+Math.random()*4}s;animation-delay:${Math.random()*3}s"></div>`}).join('');
-    bg=`<div class="demo-bg ${v.gradClass||'g6'}"><div class="pts">${pts}</div><span style="position:relative;z-index:1;filter:drop-shadow(0 0 20px rgba(0,0,0,.4))">${v.demoIcon||'🎬'}</span></div>`;
+    bg=`<div class="demo-bg ${v.gradClass||'g6'}"><div class="pts">${pts}</div><span style="position:relative;z-index:1">${v.demoIcon||'🎬'}</span></div>`;
   }else{
     let src=this.blobs[v.id];
     if(!src){try{const b=await S.get(v.id);if(b){src=URL.createObjectURL(b);this.blobs[v.id]=src}}catch{}}
     bg=src?`<video src="${src}" loop muted playsinline preload="metadata"></video>`:`<div class="demo-bg g6"><span>🎬</span></div>`;
   }
-  const av=this.avHtml(u,42);
-  const hs=det?'height:100vh':'';
+  const av=this.avHtml(u,42);const hs=det?'height:100vh':'';
   const dn=u.displayName&&u.displayName!==u.username?`<div class="fi-dn">${u.displayName}</div>`:'';
-  return`<div class="fi" data-v="${v.id}" style="${hs}">
-    <div class="fi-bg">${bg}</div><div class="fi-ov"></div>
+  return`<div class="fi" data-v="${v.id}" style="${hs}"><div class="fi-bg">${bg}</div><div class="fi-ov"></div>
     <div class="ppo" data-v="${v.id}"><i class="fas fa-play pi" id="pi_${v.id}"></i><i class="fas fa-heart dth" id="dth_${v.id}"></i></div>
-    <div class="fi-info">
-      <div class="fi-user"><span onclick="V.viewProf('${v.userId}')" style="cursor:pointer">@${u.username}</span>${u.verified?'<i class="fas fa-check-circle verified"></i>':''}${!self&&!this.isAnon?`<button class="flw ${flw?'on':''}" onclick="V.toggleFlw('${v.userId}',this)">${flw?'Seguindo':'Seguir'}</button>`:''}</div>
-      ${dn}
-      <div class="fi-desc">${v.description||v.title}</div>
-      <div class="fi-tags">${(v.hashtags||[]).map(h=>`<span onclick="V.searchTag('${h}')">#${h}</span>`).join(' ')}</div>
-    </div>
-    <div class="fi-acts">
-      <div class="fi-act"><div class="fi-av" onclick="V.viewProf('${v.userId}')">${av}</div></div>
-      <div class="fi-act"><button class="${liked?'liked':''}" onclick="V.toggleLike('${v.id}',this)"><i class="fas fa-heart"></i></button><span>${this.fN(v.likes.length)}</span></div>
-      <div class="fi-act"><button onclick="V.openCmt('${v.id}')"><i class="fas fa-comment-dots"></i></button><span>${this.fN(cs.length)}</span></div>
-      <div class="fi-act"><button onclick="V.openSh('${v.id}')"><i class="fas fa-share"></i></button><span>Enviar</span></div>
-    </div></div>`;
+    <div class="fi-info"><div class="fi-user"><span onclick="V.viewProf('${v.userId}')" style="cursor:pointer">@${u.username}</span>${u.verified?'<i class="fas fa-check-circle verified"></i>':''}${!self&&!this.isAnon?`<button class="flw ${flw?'on':''}" onclick="V.toggleFlw('${v.userId}',this)">${flw?'Seguindo':'Seguir'}</button>`:''}</div>${dn}<div class="fi-desc">${v.description||v.title}</div><div class="fi-tags">${(v.hashtags||[]).map(h=>`<span onclick="V.searchTag('${h}')">#${h}</span>`).join(' ')}</div></div>
+    <div class="fi-acts"><div class="fi-act"><div class="fi-av" onclick="V.viewProf('${v.userId}')">${av}</div></div><div class="fi-act"><button class="${liked?'liked':''}" onclick="V.toggleLike('${v.id}',this)"><i class="fas fa-heart"></i></button><span>${this.fN(v.likes.length)}</span></div><div class="fi-act"><button onclick="V.openCmt('${v.id}')"><i class="fas fa-comment-dots"></i></button><span>${this.fN(cs.length)}</span></div><div class="fi-act"><button onclick="V.openSh('${v.id}')"><i class="fas fa-share"></i></button><span>Enviar</span></div></div></div>`;
 },
 
-obsVids(){
-  const vs=document.querySelectorAll('.fi video');if(!vs.length)return;
-  const o=new IntersectionObserver(es=>{es.forEach(e=>{e.isIntersecting?e.target.play().catch(()=>{}):e.target.pause()})},{threshold:.5});
-  vs.forEach(v=>o.observe(v));
-},
+obsVids(){const vs=document.querySelectorAll('.fi video');if(!vs.length)return;const o=new IntersectionObserver(es=>{es.forEach(e=>{e.isIntersecting?e.target.play().catch(()=>{}):e.target.pause()})},{threshold:.5});vs.forEach(v=>o.observe(v))},
 
-// ---- LIKE ----
-toggleLike(vid,btn){
-  if(!this.requireAuth())return;
-  const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;
-  const i=v.likes.indexOf(this.user.id);
-  if(i===-1){v.likes.push(this.user.id);btn.classList.add('liked');if(v.userId!==this.user.id)this.addNot(v.userId,'like',this.user.id,vid)}
-  else{v.likes.splice(i,1);btn.classList.remove('liked')}
-  D.sV(vs);const s=btn.parentElement.querySelector('span');if(s)s.textContent=this.fN(v.likes.length);
-},
+toggleLike(vid,btn){if(!this.requireAuth())return;const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;const i=v.likes.indexOf(this.user.id);if(i===-1){v.likes.push(this.user.id);btn.classList.add('liked');if(v.userId!==this.user.id)this.addNot(v.userId,'like',this.user.id,vid)}else{v.likes.splice(i,1);btn.classList.remove('liked')}D.sV(vs);const s=btn.parentElement.querySelector('span');if(s)s.textContent=this.fN(v.likes.length)},
 
-dblTap(vid){
-  if(!this.requireAuth())return;
-  const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;
-  if(!v.likes.includes(this.user.id)){
-    v.likes.push(this.user.id);D.sV(vs);
-    if(v.userId!==this.user.id)this.addNot(v.userId,'like',this.user.id,vid);
-    const fi=document.querySelector(`.fi[data-v="${vid}"]`);
-    if(fi){const b=fi.querySelector('.fi-act button');if(b)b.classList.add('liked');
-    const sp=fi.querySelector('.fi-act span');if(sp&&!isNaN(parseInt(sp.textContent)))sp.textContent=this.fN(v.likes.length)}
-  }
-  const h=document.getElementById('dth_'+vid);
-  if(h){h.classList.remove('show');void h.offsetWidth;h.classList.add('show');setTimeout(()=>h.classList.remove('show'),800)}
-},
+dblTap(vid){if(!this.requireAuth())return;const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;if(!v.likes.includes(this.user.id)){v.likes.push(this.user.id);D.sV(vs);if(v.userId!==this.user.id)this.addNot(v.userId,'like',this.user.id,vid);const fi=document.querySelector(`.fi[data-v="${vid}"]`);if(fi){const b=fi.querySelector('.fi-act button');if(b)b.classList.add('liked');const sp=fi.querySelector('.fi-act span');if(sp&&!isNaN(parseInt(sp.textContent)))sp.textContent=this.fN(v.likes.length)}}const h=document.getElementById('dth_'+vid);if(h){h.classList.remove('show');void h.offsetWidth;h.classList.add('show');setTimeout(()=>h.classList.remove('show'),800)}},
 
-// ---- FOLLOW ----
-toggleFlw(uid,btn){
-  if(!this.requireAuth())return;if(uid===this.user.id)return;
-  const us=D.users();const me=us.find(u=>u.id===this.user.id);const ot=us.find(u=>u.id===uid);
-  if(!me||!ot)return;
-  const i=me.following.indexOf(uid);
-  if(i===-1){me.following.push(uid);if(!ot.followers.includes(me.id))ot.followers.push(me.id);if(btn){btn.textContent='Seguindo';btn.classList.add('on')}this.addNot(uid,'follow',me.id,null);this.toast('Seguindo @'+ot.username,'success')}
-  else{me.following.splice(i,1);const fi=ot.followers.indexOf(me.id);if(fi!==-1)ot.followers.splice(fi,1);if(btn){btn.textContent='Seguir';btn.classList.remove('on')}}
-  D.sU(us);this.refresh();
-},
+toggleFlw(uid,btn){if(!this.requireAuth())return;if(uid===this.user.id)return;const us=D.users();const me=us.find(u=>u.id===this.user.id);const ot=us.find(u=>u.id===uid);if(!me||!ot)return;const i=me.following.indexOf(uid);if(i===-1){me.following.push(uid);if(!ot.followers.includes(me.id))ot.followers.push(me.id);if(btn){btn.textContent='Seguindo';btn.classList.add('on')}this.addNot(uid,'follow',me.id,null);this.toast('Seguindo @'+ot.username,'success')}else{me.following.splice(i,1);const fi=ot.followers.indexOf(me.id);if(fi!==-1)ot.followers.splice(fi,1);if(btn){btn.textContent='Seguir';btn.classList.remove('on')}}D.sU(us);this.refresh()},
 
-// ---- COMMENTS ----
 openCmt(vid){this.curVid=vid;document.getElementById('cmtModal').classList.add('show');this.renderCmts(vid);document.getElementById('cmtIn').value='';document.getElementById('cmtIn').focus()},
-
 renderCmts(vid){
-  const cs=D.cmts().filter(c=>c.videoId===vid).sort((a,b)=>a.createdAt-b.createdAt);
-  const top=cs.filter(c=>!c.parentId);const us=D.users();
+  const cs=D.cmts().filter(c=>c.videoId===vid).sort((a,b)=>a.createdAt-b.createdAt);const top=cs.filter(c=>!c.parentId);const us=D.users();
   document.getElementById('cmtCnt').textContent=`${cs.length} comentário${cs.length!==1?'s':''}`;
-  if(!top.length){document.getElementById('cmtList').innerHTML='<div class="no-cmt"><i class="far fa-comment-dots" style="font-size:1.8rem;margin-bottom:8px;display:block;color:var(--text3)"></i>Seja o primeiro a comentar!</div>';return}
+  if(!top.length){document.getElementById('cmtList').innerHTML='<div class="no-cmt">Seja o primeiro a comentar!</div>';return}
   let h='';
-  top.forEach(c=>{
-    const u=us.find(x=>x.id===c.userId);if(!u)return;
-    const lk=!this.isAnon&&c.likes&&c.likes.includes(this.user.id);
-    const reps=cs.filter(r=>r.parentId===c.id);
+  top.forEach(c=>{const u=us.find(x=>x.id===c.userId);if(!u)return;const lk=!this.isAnon&&c.likes&&c.likes.includes(this.user.id);const reps=cs.filter(r=>r.parentId===c.id);
     h+=`<div class="cmt"><div class="cmt-a" onclick="V.viewProf('${u.id}')">${this.avHtml(u,32)}</div><div class="cmt-b"><div class="cmt-u" onclick="V.viewProf('${u.id}')">@${u.username} ${u.verified?'<i class="fas fa-check-circle verified"></i>':''}</div><div class="cmt-t">${this.esc(c.text)}</div><div class="cmt-m"><span>${this.tA(c.createdAt)}</span><button class="${lk?'liked':''}" onclick="V.toggleCL('${c.id}',this)"><i class="fas fa-heart"></i> ${c.likes?c.likes.length:0}</button><button onclick="document.getElementById('cmtIn').value='@${u.username} ';document.getElementById('cmtIn').dataset.rp='${c.id}';document.getElementById('cmtIn').focus()">Responder</button></div>`;
-    reps.forEach(r=>{const ru=us.find(x=>x.id===r.userId);if(!ru)return;const rl=!this.isAnon&&r.likes&&r.likes.includes(this.user.id);
-      h+=`<div class="cmt" style="margin-top:8px"><div class="cmt-a" style="width:26px;height:26px">${this.avHtml(ru,26)}</div><div class="cmt-b"><div class="cmt-u" style="font-size:.7rem">@${ru.username}</div><div class="cmt-t" style="font-size:.76rem">${this.esc(r.text)}</div><div class="cmt-m"><span>${this.tA(r.createdAt)}</span><button class="${rl?'liked':''}" onclick="V.toggleCL('${r.id}',this)"><i class="fas fa-heart"></i> ${r.likes?r.likes.length:0}</button></div></div></div>`});
+    reps.forEach(r=>{const ru=us.find(x=>x.id===r.userId);if(!ru)return;const rl=!this.isAnon&&r.likes&&r.likes.includes(this.user.id);h+=`<div class="cmt" style="margin-top:8px"><div class="cmt-a" style="width:26px;height:26px">${this.avHtml(ru,26)}</div><div class="cmt-b"><div class="cmt-u" style="font-size:.7rem">@${ru.username}</div><div class="cmt-t" style="font-size:.76rem">${this.esc(r.text)}</div><div class="cmt-m"><span>${this.tA(r.createdAt)}</span><button class="${rl?'liked':''}" onclick="V.toggleCL('${r.id}',this)"><i class="fas fa-heart"></i> ${r.likes?r.likes.length:0}</button></div></div></div>`});
     h+=`</div></div>`;
   });
-  document.getElementById('cmtList').innerHTML=h;
-  const l=document.getElementById('cmtList');l.scrollTop=l.scrollHeight;
+  document.getElementById('cmtList').innerHTML=h;const l=document.getElementById('cmtList');l.scrollTop=l.scrollHeight;
 },
+submitCmt(){if(!this.requireAuth())return;const inp=document.getElementById('cmtIn');const txt=inp.value.trim();if(!txt||!this.curVid)return;const cs=D.cmts();cs.push({id:'c'+Date.now(),videoId:this.curVid,userId:this.user.id,text:txt,likes:[],parentId:inp.dataset.rp||null,createdAt:Date.now()});D.sC(cs);inp.value='';inp.dataset.rp='';const v=D.vids().find(x=>x.id===this.curVid);if(v&&v.userId!==this.user.id)this.addNot(v.userId,'comment',this.user.id,this.curVid);this.renderCmts(this.curVid)},
+toggleCL(cid,btn){if(!this.requireAuth())return;const cs=D.cmts();const c=cs.find(x=>x.id===cid);if(!c)return;if(!c.likes)c.likes=[];const i=c.likes.indexOf(this.user.id);if(i===-1){c.likes.push(this.user.id);btn.classList.add('liked')}else{c.likes.splice(i,1);btn.classList.remove('liked')}D.sC(cs);btn.innerHTML=`<i class="fas fa-heart"></i> ${c.likes.length}`},
 
-submitCmt(){
-  if(!this.requireAuth())return;
-  const inp=document.getElementById('cmtIn');const txt=inp.value.trim();if(!txt||!this.curVid)return;
-  const cs=D.cmts();cs.push({id:'c'+Date.now(),videoId:this.curVid,userId:this.user.id,text:txt,likes:[],parentId:inp.dataset.rp||null,createdAt:Date.now()});
-  D.sC(cs);inp.value='';inp.dataset.rp='';
-  const v=D.vids().find(x=>x.id===this.curVid);
-  if(v&&v.userId!==this.user.id)this.addNot(v.userId,'comment',this.user.id,this.curVid);
-  this.renderCmts(this.curVid);
-},
-
-toggleCL(cid,btn){
-  if(!this.requireAuth())return;
-  const cs=D.cmts();const c=cs.find(x=>x.id===cid);if(!c)return;if(!c.likes)c.likes=[];
-  const i=c.likes.indexOf(this.user.id);
-  if(i===-1){c.likes.push(this.user.id);btn.classList.add('liked')}else{c.likes.splice(i,1);btn.classList.remove('liked')}
-  D.sC(cs);btn.innerHTML=`<i class="fas fa-heart"></i> ${c.likes.length}`;
-},
-
-// ---- SHARE ----
 openSh(vid){this.curVid=vid;document.getElementById('shModal').classList.add('show')},
 closeM(id){document.getElementById(id).classList.remove('show')},
-share(t){
-  const url=location.href;
-  switch(t){
-    case'wa':window.open(`https://wa.me/?text=Confira no Vilbra! ${url}`);break;
-    case'tw':window.open(`https://twitter.com/intent/tweet?text=Confira no Vilbra!&url=${url}`);break;
-    case'fb':window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`);break;
-    case'cp':navigator.clipboard.writeText(url).then(()=>this.toast('Link copiado!','success'));break;
-    case'rp':this.closeM('shModal');document.getElementById('rpModal').classList.add('show');return;
-  }
-  this.closeM('shModal');
-},
-doReport(r){this.closeM('rpModal');this.toast('Denúncia enviada!','success')},
+share(t){const url=location.href;switch(t){case'wa':window.open(`https://wa.me/?text=Confira no Vilbra! ${url}`);break;case'tw':window.open(`https://twitter.com/intent/tweet?text=Confira!&url=${url}`);break;case'fb':window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`);break;case'cp':navigator.clipboard.writeText(url).then(()=>this.toast('Copiado!','success'));break;case'rp':this.closeM('shModal');document.getElementById('rpModal').classList.add('show');return}this.closeM('shModal')},
+doReport(){this.closeM('rpModal');this.toast('Denúncia enviada!','success')},
 
-// ---- UPLOAD ----
-resetUp(){
-  document.getElementById('vTitle').value='';document.getElementById('vDesc').value='';
-  document.getElementById('fName').textContent='';document.getElementById('upPv').style.display='none';
-  this.tags=[];this.selFile=null;this.renderTags();
-},
-
-handleFile(f){
-  if(!f)return;if(!f.type.startsWith('video/')){this.toast('Selecione um vídeo','error');return}
-  if(f.size>100*1024*1024){this.toast('Máx 100MB','error');return}
-  this.selFile=f;document.getElementById('fName').textContent=f.name;
-  const pv=document.getElementById('upPv');const vid=document.getElementById('pvVid');
-  vid.src=URL.createObjectURL(f);pv.style.display='block';
-  vid.onloadedmetadata=()=>{if(vid.duration>60){this.toast('Máx 60 segundos','error');this.selFile=null;pv.style.display='none'}}
-},
-
-addTag(t){t=t.replace(/[^a-zA-Z0-9_\u00C0-\u024F]/g,'').toLowerCase();if(!t||this.tags.includes(t))return;if(this.tags.length>=10){this.toast('Máx 10 hashtags','error');return}this.tags.push(t);this.renderTags()},
+resetUp(){document.getElementById('vTitle').value='';document.getElementById('vDesc').value='';document.getElementById('fName').textContent='';document.getElementById('upPv').style.display='none';this.tags=[];this.selFile=null;this.renderTags()},
+handleFile(f){if(!f)return;if(!f.type.startsWith('video/')){this.toast('Selecione um vídeo','error');return}if(f.size>100*1024*1024){this.toast('Máx 100MB','error');return}this.selFile=f;document.getElementById('fName').textContent=f.name;const pv=document.getElementById('upPv');const vid=document.getElementById('pvVid');vid.src=URL.createObjectURL(f);pv.style.display='block';vid.onloadedmetadata=()=>{if(vid.duration>60){this.toast('Máx 60 seg','error');this.selFile=null;pv.style.display='none'}}},
+addTag(t){t=t.replace(/[^a-zA-Z0-9_\u00C0-\u024F]/g,'').toLowerCase();if(!t||this.tags.includes(t))return;if(this.tags.length>=10)return;this.tags.push(t);this.renderTags()},
 rmTag(t){this.tags=this.tags.filter(h=>h!==t);this.renderTags()},
-renderTags(){document.getElementById('tagArea').innerHTML=this.tags.map(h=>`<div class="tag">#${h}<span class="rm" onclick="V.rmTag('${h}')">×</span></div>`).join('')+`<input type="text" id="tagIn" placeholder="${this.tags.length?'':'Adicionar hashtag...'}" onkeydown="if(event.key==='Enter'){event.preventDefault();V.addTag(this.value);this.value=''}">`},
+renderTags(){document.getElementById('tagArea').innerHTML=this.tags.map(h=>`<div class="tag">#${h}<span class="rm" onclick="V.rmTag('${h}')">×</span></div>`).join('')+`<input type="text" id="tagIn" placeholder="${this.tags.length?'':'Hashtag...'}" onkeydown="if(event.key==='Enter'){event.preventDefault();V.addTag(this.value);this.value=''}">`},
 
 async submitVid(){
-  if(!this.requireAuth())return;
-  const title=document.getElementById('vTitle').value.trim();if(!title){this.toast('Adicione um título','error');return}
-  const desc=document.getElementById('vDesc').value.trim();
-  const v={id:'v'+Date.now(),userId:this.user.id,isDemo:!this.selFile,gradClass:'g'+(1+Math.floor(Math.random()*10)),demoIcon:'🎬',title,description:desc,hashtags:[...this.tags],likes:[],status:'pending',views:0,createdAt:Date.now()};
-  if(this.selFile){v.isDemo=false;try{await S.put(v.id,this.selFile)}catch{this.toast('Erro ao salvar','error');return}}
+  if(!this.requireAuth())return;const title=document.getElementById('vTitle').value.trim();if(!title){this.toast('Título','error');return}
+  const v={id:'v'+Date.now(),userId:this.user.id,isDemo:!this.selFile,gradClass:'g'+(1+Math.floor(Math.random()*10)),demoIcon:'🎬',title,description:document.getElementById('vDesc').value.trim(),hashtags:[...this.tags],likes:[],status:'pending',views:0,createdAt:Date.now()};
+  if(this.selFile){v.isDemo=false;try{await S.put(v.id,this.selFile)}catch{this.toast('Erro','error');return}}
   const vs=D.vids();vs.push(v);D.sV(vs);
   D.users().filter(u=>u.email===ADMIN_EMAIL).forEach(a=>{if(a.id!==(this.user&&this.user.id))this.addNot(a.id,'pending',this.user.id,v.id)});
-  this.toast('Vídeo enviado! Aguardando aprovação ⏳','success');this.resetUp();this.nav('profPage');
+  this.toast('Enviado! Aguardando aprovação ⏳','success');this.resetUp();this.nav('profPage');
 },
 
 // ---- EXPLORE ----
 renderExp(q=''){
-  const c=document.getElementById('expCont');
-  const vs=D.vids().filter(v=>v.status==='approved');const us=D.users();
+  const c=document.getElementById('expCont');const vs=D.vids().filter(v=>v.status==='approved');const us=D.users();
   const allT=[...new Set(vs.flatMap(v=>v.hashtags||[]))];
   if(q){
     const ql=q.toLowerCase();
     const mv=vs.filter(v=>v.title.toLowerCase().includes(ql)||v.description.toLowerCase().includes(ql)||(v.hashtags||[]).some(h=>h.includes(ql)));
-    const mu=us.filter(u=>u.username.toLowerCase().includes(ql)||(u.displayName||'').toLowerCase().includes(ql)||(u.bio||'').toLowerCase().includes(ql));
+    const mu=us.filter(u=>u.username.toLowerCase().includes(ql)||(u.displayName||'').toLowerCase().includes(ql));
     let h='';
-    if(mu.length){h+=`<div class="exp-sec"><h3><i class="fas fa-users"></i> Usuários</h3>`;mu.forEach(u=>{const vc=vs.filter(v=>v.userId===u.id).length;h+=`<div class="ur" onclick="V.viewProf('${u.id}')"><div class="ua">${this.avHtml(u,40)}</div><div class="ui"><div class="un">${u.displayName||u.username} ${u.verified?'<i class="fas fa-check-circle verified"></i>':''}</div><div class="us">@${u.username} • ${u.followers.length} seguidores • ${vc} vídeos</div></div></div>`});h+='</div>'}
+    if(mu.length){h+=`<div class="exp-sec"><h3><i class="fas fa-users"></i> Usuários</h3>`;mu.forEach(u=>{h+=`<div class="ur" onclick="V.viewProf('${u.id}')"><div class="ua">${this.avHtml(u,40)}</div><div class="ui"><div class="un">${u.displayName||u.username} ${u.verified?'<i class="fas fa-check-circle verified"></i>':''}</div><div class="us">@${u.username} • ${u.followers.length} seg</div></div></div>`});h+='</div>'}
     if(mv.length){h+=`<div class="exp-sec"><h3><i class="fas fa-video"></i> Vídeos</h3><div class="exp-grid">`;mv.forEach(v=>h+=this.expCard(v));h+='</div></div>'}
-    if(!mv.length&&!mu.length)h=`<div style="text-align:center;padding:35px;color:var(--text3)"><i class="fas fa-search" style="font-size:2rem;margin-bottom:8px;display:block"></i>Sem resultados para "${q}"</div>`;
+    if(!mv.length&&!mu.length)h=`<div style="text-align:center;padding:35px;color:var(--text3)">Sem resultados</div>`;
     c.innerHTML=h;return;
   }
   let h='';
@@ -884,48 +771,20 @@ renderExp(q=''){
   if(rec.length){h+=`<div class="exp-sec"><h3><i class="fas fa-clock"></i> Recentes</h3><div class="exp-grid">`;rec.forEach(v=>h+=this.expCard(v));h+='</div></div>'}
   c.innerHTML=h;
 },
-
-expCard(v){
-  const u=D.users().find(x=>x.id===v.userId);
-  return`<div class="exp-card" onclick="V.openVD('${v.id}')"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center;font-size:2rem">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div><div class="ci"><div style="font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.7rem">${v.title}</div><div style="display:flex;align-items:center;gap:3px"><i class="fas fa-heart" style="font-size:.6rem"></i> ${this.fN(v.likes.length)} • @${u?u.username:'?'}</div></div></div>`;
-},
-
+expCard(v){const u=D.users().find(x=>x.id===v.userId);return`<div class="exp-card" onclick="V.openVD('${v.id}')"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center;font-size:2rem">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div><div class="ci"><div style="font-weight:600;font-size:.7rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v.title}</div><div style="display:flex;align-items:center;gap:3px"><i class="fas fa-heart" style="font-size:.6rem"></i>${this.fN(v.likes.length)}</div></div></div>`},
 searchTag(t){this.nav('expPage');document.getElementById('searchIn').value=t;this.renderExp(t)},
+async openVD(vid){const v=D.vids().find(x=>x.id===vid);if(!v)return;const d=document.getElementById('vDetail');const h=await this.buildFI(v,true);d.innerHTML=`<div style="position:fixed;top:12px;left:12px;z-index:10"><button onclick="document.getElementById('vDetail').classList.remove('show')" style="width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px)"><i class="fas fa-arrow-left"></i></button></div>${h}`;d.classList.add('show');this.obsVids()},
 
-async openVD(vid){
-  const v=D.vids().find(x=>x.id===vid);if(!v)return;
-  const d=document.getElementById('vDetail');
-  const h=await this.buildFI(v,true);
-  d.innerHTML=`<div style="position:fixed;top:12px;left:12px;z-index:10"><button onclick="document.getElementById('vDetail').classList.remove('show')" style="width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px)"><i class="fas fa-arrow-left"></i></button></div>${h}`;
-  d.classList.add('show');this.obsVids();
-},
-
-// ---- NOTIFICATIONS ----
-addNot(userId,type,fromId,videoId){
-  const ns=D.nots();
-  if(ns.find(n=>n.userId===userId&&n.type===type&&n.fromId===fromId&&n.videoId===videoId&&Date.now()-n.createdAt<60000))return;
-  ns.unshift({id:'n'+Date.now()+Math.random().toString(36).substr(2,4),userId,type,fromId,videoId,read:false,createdAt:Date.now()});
-  D.sN(ns);this.updateBadge();
-},
-
-updateBadge(){
-  if(this.isAnon){document.getElementById('nBadge').style.display='none';return}
-  const c=D.nots().filter(n=>n.userId===this.user.id&&!n.read).length;
-  const b=document.getElementById('nBadge');
-  if(c>0){b.textContent=c>99?'99+':c;b.style.display='flex'}else b.style.display='none';
-},
-
+// ---- NOTIFS ----
+addNot(userId,type,fromId,videoId){const ns=D.nots();if(ns.find(n=>n.userId===userId&&n.type===type&&n.fromId===fromId&&n.videoId===videoId&&Date.now()-n.createdAt<60000))return;ns.unshift({id:'n'+Date.now()+Math.random().toString(36).substr(2,4),userId,type,fromId,videoId,read:false,createdAt:Date.now()});D.sN(ns);this.updateBadge()},
+updateBadge(){if(this.isAnon){document.getElementById('nBadge').style.display='none';return}const c=D.nots().filter(n=>n.userId===this.user.id&&!n.read).length;const b=document.getElementById('nBadge');if(c>0){b.textContent=c>99?'99+':c;b.style.display='flex'}else b.style.display='none'},
 renderNots(){
   const ns=D.nots().filter(n=>n.userId===this.user.id).sort((a,b)=>b.createdAt-a.createdAt);
   const all=D.nots();all.forEach(n=>{if(n.userId===this.user.id)n.read=true});D.sN(all);this.updateBadge();
   if(!ns.length){document.getElementById('nList').innerHTML='<div class="n-empty"><i class="fas fa-bell-slash"></i>Nenhuma notificação</div>';return}
-  const cfg={like:{i:'fas fa-heart',c:'like',t:'curtiu seu vídeo'},comment:{i:'fas fa-comment',c:'comment',t:'comentou no seu vídeo'},follow:{i:'fas fa-user-plus',c:'follow',t:'começou a te seguir'},approved:{i:'fas fa-check-circle',c:'approved',t:'Seu vídeo foi aprovado! ✅'},rejected:{i:'fas fa-times-circle',c:'rejected',t:'Seu vídeo foi rejeitado ❌'},pending:{i:'fas fa-clock',c:'follow',t:'enviou vídeo para aprovação'},av_ok:{i:'fas fa-image',c:'approved',t:'Sua foto de perfil foi aprovada! ✅'},av_no:{i:'fas fa-image',c:'rejected',t:'Sua foto de perfil foi rejeitada ❌'}};
+  const cfg={like:{i:'fas fa-heart',c:'like',t:'curtiu seu vídeo'},comment:{i:'fas fa-comment',c:'comment',t:'comentou no seu vídeo'},follow:{i:'fas fa-user-plus',c:'follow',t:'começou a te seguir'},approved:{i:'fas fa-check-circle',c:'approved',t:'Seu vídeo foi aprovado! ✅'},rejected:{i:'fas fa-times-circle',c:'rejected',t:'Seu vídeo foi rejeitado ❌'},pending:{i:'fas fa-clock',c:'follow',t:'enviou vídeo para aprovação'},av_ok:{i:'fas fa-image',c:'approved',t:'Sua foto foi aprovada! ✅'},av_no:{i:'fas fa-image',c:'rejected',t:'Sua foto foi rejeitada ❌'},av_pend:{i:'fas fa-image',c:'follow',t:'enviou foto para aprovação'},verify_ok:{i:'fas fa-check-circle',c:'verify',t:'Sua conta foi verificada! ✨'},verify_no:{i:'fas fa-times-circle',c:'rejected',t:'Verificação negada'},verify_req:{i:'fas fa-shield-alt',c:'verify',t:'solicitou verificação'}};
   let h='';
-  ns.forEach(n=>{
-    const from=D.users().find(u=>u.id===n.fromId);const cf=cfg[n.type]||cfg.like;
-    const fn=from?`<strong>@${from.username}</strong>`:'Alguém';
-    const txt=['approved','rejected','av_ok','av_no'].includes(n.type)?cf.t:`${fn} ${cf.t}`;
-    const oc=n.videoId?`V.openVD('${n.videoId}')`:n.fromId?`V.viewProf('${n.fromId}')`:'';
+  ns.forEach(n=>{const from=D.users().find(u=>u.id===n.fromId);const cf=cfg[n.type]||cfg.like;const fn=from?`<strong>@${from.username}</strong>`:'Alguém';const txt=['approved','rejected','av_ok','av_no','verify_ok','verify_no'].includes(n.type)?cf.t:`${fn} ${cf.t}`;const oc=n.videoId?`V.openVD('${n.videoId}')`:n.fromId?`V.viewProf('${n.fromId}')`:'';
     h+=`<div class="nitem ${n.read?'':'unread'}" onclick="${oc}"><div class="nico ${cf.c}"><i class="${cf.i}"></i></div><div class="nc"><div class="nt">${txt}</div><div class="nm">${this.tA(n.createdAt)}</div></div></div>`;
   });
   document.getElementById('nList').innerHTML=h;
@@ -937,20 +796,23 @@ renderProf(){
   const vs=D.vids().filter(v=>v.userId===u.id).sort((a,b)=>b.createdAt-a.createdAt);
   const tL=vs.reduce((s,v)=>s+v.likes.length,0);
   const av=this.avHtml(u,88);
-  const pBadge=u.avatarType==='image'&&u.avatarStatus==='pending'?'<div class="pend" title="Aguardando">⏳</div>':'';
+  const pBadge=u.avatarType==='image'&&u.avatarStatus==='pending'?'<div class="pend">⏳</div>':'';
+
+  // Verify status display
+  let verifyBtnHtml='';
+  if(u.verifyStatus==='none'||u.verifyStatus==='rejected'){
+    verifyBtnHtml=`<button class="btn btn-sm" style="background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;box-shadow:var(--gB)" onclick="V.openVerify()"><i class="fas fa-check-circle"></i> Verificar</button>`;
+  }
 
   let h=`<div class="p-hdr">
     <div class="p-av" onclick="V.openEdit()">${av}${pBadge}<div class="cam"><i class="fas fa-camera"></i></div></div>
     <div class="p-name">${u.displayName||u.username} ${u.verified?'<i class="fas fa-check-circle verified" style="font-size:.82rem"></i>':''}</div>
     <div class="p-handle">@${u.username}</div>
     ${u.bio?`<div class="p-bio">${this.esc(u.bio)}</div>`:''}
-    <div class="p-stats">
-      <div class="p-stat"><div class="n">${u.following?u.following.length:0}</div><div class="l">Seguindo</div></div>
-      <div class="p-stat"><div class="n">${u.followers?u.followers.length:0}</div><div class="l">Seguidores</div></div>
-      <div class="p-stat"><div class="n">${this.fN(tL)}</div><div class="l">Curtidas</div></div>
-    </div>
+    <div class="p-stats"><div class="p-stat"><div class="n">${u.following?u.following.length:0}</div><div class="l">Seguindo</div></div><div class="p-stat"><div class="n">${u.followers?u.followers.length:0}</div><div class="l">Seguidores</div></div><div class="p-stat"><div class="n">${this.fN(tL)}</div><div class="l">Curtidas</div></div></div>
     <div class="p-acts">
       <button class="btn btn-o btn-sm" onclick="V.openEdit()"><i class="fas fa-edit"></i> Editar</button>
+      ${verifyBtnHtml}
       ${this.isAdmin?`<button class="btn btn-sm" style="background:var(--purple);color:#fff;box-shadow:var(--gV)" onclick="V.nav('adminPage')"><i class="fas fa-shield-alt"></i> Admin</button>`:''}
     </div>
   </div>`;
@@ -958,10 +820,7 @@ renderProf(){
   h+=`<div class="p-tabs"><div class="p-tab active" onclick="V.pTab('v',this)"><i class="fas fa-th"></i> Vídeos</div><div class="p-tab" onclick="V.pTab('l',this)"><i class="fas fa-heart"></i> Curtidos</div></div>`;
   h+=`<div id="pVTab"><div class="p-grid">`;
   if(!vs.length)h+=`<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--text3)">Nenhum vídeo</div>`;
-  vs.forEach(v=>{
-    const sb=v.status==='pending'?'<div class="sb sp">Pendente</div>':v.status==='rejected'?'<div class="sb sr">Rejeitado</div>':'';
-    h+=`<div class="pvc" onclick="V.openVD('${v.id}')"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div><div class="ov"><i class="fas fa-heart"></i> ${this.fN(v.likes.length)}</div>${sb}</div>`;
-  });
+  vs.forEach(v=>{const sb=v.status==='pending'?'<div class="sb sp">Pendente</div>':v.status==='rejected'?'<div class="sb sr">Rejeitado</div>':'';h+=`<div class="pvc" onclick="V.openVD('${v.id}')"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div><div class="ov"><i class="fas fa-heart"></i> ${this.fN(v.likes.length)}</div>${sb}</div>`});
   h+=`</div></div>`;
   const lv=D.vids().filter(v=>v.likes.includes(u.id)&&v.status==='approved');
   h+=`<div id="pLTab" style="display:none"><div class="p-grid">`;
@@ -969,20 +828,19 @@ renderProf(){
   lv.forEach(v=>{h+=`<div class="pvc" onclick="V.openVD('${v.id}')"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div><div class="ov"><i class="fas fa-heart"></i> ${this.fN(v.likes.length)}</div></div>`});
   h+=`</div></div>`;
 
+  // Settings
+  const vsBadge=u.verifyStatus==='pending'?'<span class="badge-sm sp">Pendente</span>':u.verifyStatus==='verified'?'<span class="badge-sm" style="background:var(--blue);color:var(--bg)">Verificado</span>':'';
+
   h+=`<div class="settings">
     <div class="sitem" onclick="V.openEdit()"><div class="sl"><i class="fas fa-user-edit"></i><span>Editar Perfil</span></div><div class="sr2"><i class="fas fa-chevron-right"></i></div></div>
+    <div class="sitem" onclick="V.openVerify()"><div class="sl"><i class="fas fa-check-circle"></i><span>Verificação</span></div><div class="sr2">${vsBadge}<i class="fas fa-chevron-right"></i></div></div>
     ${this.isAdmin?`<div class="sitem" onclick="V.nav('adminPage')"><div class="sl"><i class="fas fa-shield-alt" style="color:var(--purple)"></i><span>Painel Admin</span></div><div class="sr2"><i class="fas fa-chevron-right"></i></div></div>`:''}
     <div class="sitem" onclick="V.logout()"><div class="sl"><i class="fas fa-sign-out-alt" style="color:var(--red)"></i><span style="color:var(--red)">Sair</span></div><div class="sr2"><i class="fas fa-chevron-right"></i></div></div>
   </div>`;
-
   document.getElementById('profCont').innerHTML=h;
 },
 
-pTab(t,el){
-  document.querySelectorAll('.p-tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');
-  document.getElementById('pVTab').style.display=t==='v'?'block':'none';
-  document.getElementById('pLTab').style.display=t==='l'?'block':'none';
-},
+pTab(t,el){document.querySelectorAll('.p-tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('pVTab').style.display=t==='v'?'block':'none';document.getElementById('pLTab').style.display=t==='l'?'block':'none'},
 
 viewProf(uid){
   if(!this.isAnon&&uid===this.user.id){this.nav('profPage');return}
@@ -991,32 +849,54 @@ viewProf(uid){
   const vs=D.vids().filter(v=>v.userId===uid&&v.status==='approved').sort((a,b)=>b.createdAt-a.createdAt);
   const tL=vs.reduce((s,v)=>s+v.likes.length,0);
   const flw=!this.isAnon&&this.user.following&&this.user.following.includes(uid);
-  const av=this.avHtml(u,88);
-
-  let h=`<div class="p-hdr">
-    <div class="p-av" style="cursor:default">${av}</div>
-    <div class="p-name">${u.displayName||u.username} ${u.verified?'<i class="fas fa-check-circle verified" style="font-size:.82rem"></i>':''}</div>
-    <div class="p-handle">@${u.username}</div>
-    ${u.bio?`<div class="p-bio">${this.esc(u.bio)}</div>`:''}
-    <div class="p-stats">
-      <div class="p-stat"><div class="n">${u.following?u.following.length:0}</div><div class="l">Seguindo</div></div>
-      <div class="p-stat"><div class="n">${u.followers?u.followers.length:0}</div><div class="l">Seguidores</div></div>
-      <div class="p-stat"><div class="n">${this.fN(tL)}</div><div class="l">Curtidas</div></div>
-    </div>
-    <div class="p-acts">
-      <button class="btn btn-sm ${flw?'btn-o':''}" style="${!flw?'background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff':''}" onclick="V.toggleFlw('${uid}',this);V.viewProf('${uid}')">
-        ${flw?'<i class="fas fa-user-check"></i> Seguindo':'<i class="fas fa-user-plus"></i> Seguir'}
-      </button>
-    </div>
-  </div><div class="p-grid">`;
+  let h=`<div class="p-hdr"><div class="p-av" style="cursor:default">${this.avHtml(u,88)}</div><div class="p-name">${u.displayName||u.username} ${u.verified?'<i class="fas fa-check-circle verified" style="font-size:.82rem"></i>':''}</div><div class="p-handle">@${u.username}</div>${u.bio?`<div class="p-bio">${this.esc(u.bio)}</div>`:''}<div class="p-stats"><div class="p-stat"><div class="n">${u.following?u.following.length:0}</div><div class="l">Seguindo</div></div><div class="p-stat"><div class="n">${u.followers?u.followers.length:0}</div><div class="l">Seguidores</div></div><div class="p-stat"><div class="n">${this.fN(tL)}</div><div class="l">Curtidas</div></div></div><div class="p-acts"><button class="btn btn-sm ${flw?'btn-o':''}" style="${!flw?'background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff':''}" onclick="V.toggleFlw('${uid}',this);V.viewProf('${uid}')">${flw?'<i class="fas fa-user-check"></i> Seguindo':'<i class="fas fa-user-plus"></i> Seguir'}</button></div></div><div class="p-grid">`;
   if(!vs.length)h+=`<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--text3)">Nenhum vídeo</div>`;
   vs.forEach(v=>{h+=`<div class="pvc" onclick="V.openVD('${v.id}')"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div><div class="ov"><i class="fas fa-heart"></i> ${this.fN(v.likes.length)}</div></div>`});
   h+='</div>';
   document.getElementById('opCont').innerHTML=h;
-  this.prev=this.pg;this.pg='otherPage';
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('otherPage').classList.add('active');
-  this.closeM('cmtModal');document.getElementById('vDetail').classList.remove('show');
+  this.prev=this.pg;this.pg='otherPage';document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('otherPage').classList.add('active');this.closeM('cmtModal');document.getElementById('vDetail').classList.remove('show');
+},
+
+// ---- VERIFY ----
+openVerify(){
+  if(!this.requireAuth())return;
+  this.refresh();
+  document.getElementById('verifyModal').classList.add('show');
+  const u=this.user;
+  const statusArea=document.getElementById('verifyStatusArea');
+  const submitBtn=document.getElementById('verifySubmitBtn');
+  document.getElementById('verifyReason').value=u.verifyReason||'';
+
+  if(u.verifyStatus==='verified'){
+    statusArea.innerHTML=`<div class="verify-status verified"><i class="fas fa-check-circle"></i> Sua conta é verificada!</div>`;
+    submitBtn.style.display='none';
+    document.getElementById('verifyReason').disabled=true;
+  }else if(u.verifyStatus==='pending'){
+    statusArea.innerHTML=`<div class="verify-status pending"><i class="fas fa-clock"></i> Solicitação em análise...</div>`;
+    submitBtn.style.display='none';
+    document.getElementById('verifyReason').disabled=true;
+  }else if(u.verifyStatus==='rejected'){
+    statusArea.innerHTML=`<div class="verify-status rejected" style="margin-bottom:12px"><i class="fas fa-times-circle"></i> Solicitação anterior negada. Tente novamente!</div>`;
+    submitBtn.style.display='flex';
+    document.getElementById('verifyReason').disabled=false;
+  }else{
+    statusArea.innerHTML='';
+    submitBtn.style.display='flex';
+    document.getElementById('verifyReason').disabled=false;
+  }
+},
+
+submitVerify(){
+  if(!this.requireAuth())return;
+  const reason=document.getElementById('verifyReason').value.trim();
+  if(!reason){this.toast('Escreva o motivo','error');return}
+  const us=D.users();const u=us.find(x=>x.id===this.user.id);
+  u.verifyStatus='pending';u.verifyReason=reason;
+  D.sU(us);this.refresh();
+  // Notify admin
+  us.filter(x=>x.email===ADMIN_EMAIL).forEach(a=>{if(a.id!==u.id)this.addNot(a.id,'verify_req',u.id,null)});
+  this.toast('Solicitação enviada! ⏳','success');
+  this.closeM('verifyModal');this.renderProf();
 },
 
 // ---- EDIT PROFILE ----
@@ -1026,220 +906,131 @@ openEdit(){
   document.getElementById('edHandle').value=this.user.username;
   document.getElementById('edBio').value=this.user.bio||'';
   this.selAv=this.user.avatar;this.avFile=null;this.avType=this.user.avatarType||'default';
-
-  // Handle restriction
   const canChange=!this.user.lastUsernameChange||Date.now()-this.user.lastUsernameChange>=DAYS30;
-  const hintel=document.getElementById('handleHint');
-  const handleIn=document.getElementById('edHandle');
-  if(!canChange){
-    handleIn.disabled=true;
-    const daysLeft=Math.ceil((DAYS30-(Date.now()-this.user.lastUsernameChange))/86400000);
-    hintel.textContent=`🔒 Pode trocar novamente em ${daysLeft} dia${daysLeft!==1?'s':''}`;
-    hintel.classList.add('warn');
-  }else{handleIn.disabled=false;hintel.textContent='Único. Pode trocar a cada 30 dias';hintel.classList.remove('warn')}
-
-  // Avatar preview
-  this.updateAvPreview();
-
-  // Emoji picker
+  const hintel=document.getElementById('handleHint');const hIn=document.getElementById('edHandle');
+  if(!canChange){hIn.disabled=true;const dl=Math.ceil((DAYS30-(Date.now()-this.user.lastUsernameChange))/86400000);hintel.textContent=`🔒 Troca em ${dl} dia${dl!==1?'s':''}`;hintel.classList.add('warn')}
+  else{hIn.disabled=false;hintel.textContent='Único. Troca a cada 30 dias';hintel.classList.remove('warn')}
+  this.updateAvPv();
   document.getElementById('emoPicker').innerHTML=this.emojis.map(e=>`<div class="emo ${this.user.avatar===e?'sel':''}" onclick="V.pickEmo('${e}',this)">${e}</div>`).join('');
-
-  // Default avatar preview
   document.getElementById('defAvPv').innerHTML=`<img src="${this.defAvatar(this.user.displayName||this.user.username)}" style="width:70px;height:70px;border-radius:50%">`;
-
-  // Active tab
   this.avTab(this.avType,document.querySelector(`.av-type-tab:nth-child(${this.avType==='photo'?1:this.avType==='emoji'?2:3})`));
 },
-
-avTab(type,el){
-  this.avType=type;
-  document.querySelectorAll('.av-type-tab').forEach(t=>t.classList.remove('active'));
-  if(el)el.classList.add('active');
-  document.getElementById('avPhotoSec').style.display=type==='photo'?'block':'none';
-  document.getElementById('avEmojiSec').style.display=type==='emoji'?'block':'none';
-  document.getElementById('avDefaultSec').style.display=type==='default'?'block':'none';
-},
-
-updateAvPreview(){
-  const pv=document.getElementById('edAvPv');
-  if(this.avFile){pv.innerHTML=`<img src="${this.avFile}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`}
-  else if(this.user.avatarImg&&this.user.avatarType==='image'){pv.innerHTML=`<img src="${this.user.avatarImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`}
-  else{pv.innerHTML=this.avHtml(this.user,78)}
-},
-
-pickEmo(e,el){
-  document.querySelectorAll('.emo').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');
-  this.selAv=e;this.avFile=null;
-},
-
-handleAvFile(f){
-  if(!f||!f.type.startsWith('image/'))return;
-  if(f.size>5*1024*1024){this.toast('Máx 5MB','error');return}
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const img=new Image();
-    img.onload=()=>{
-      const canvas=document.createElement('canvas');canvas.width=200;canvas.height=200;
-      const ctx=canvas.getContext('2d');
-      const sz=Math.min(img.width,img.height);
-      ctx.drawImage(img,(img.width-sz)/2,(img.height-sz)/2,sz,sz,0,0,200,200);
-      this.avFile=canvas.toDataURL('image/jpeg',0.8);
-      document.getElementById('edAvPv').innerHTML=`<img src="${this.avFile}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    };
-    img.src=e.target.result;
-  };
-  reader.readAsDataURL(f);
-},
-
+avTab(type,el){this.avType=type;document.querySelectorAll('.av-type-tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');document.getElementById('avPhotoSec').style.display=type==='photo'?'block':'none';document.getElementById('avEmojiSec').style.display=type==='emoji'?'block':'none';document.getElementById('avDefaultSec').style.display=type==='default'?'block':'none'},
+updateAvPv(){const pv=document.getElementById('edAvPv');if(this.avFile)pv.innerHTML=`<img src="${this.avFile}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;else if(this.user.avatarImg&&this.user.avatarType==='image')pv.innerHTML=`<img src="${this.user.avatarImg}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;else pv.innerHTML=this.avHtml(this.user,78)},
+pickEmo(e,el){document.querySelectorAll('.emo').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');this.selAv=e;this.avFile=null},
+handleAvFile(f){if(!f||!f.type.startsWith('image/'))return;if(f.size>5*1024*1024){this.toast('Máx 5MB','error');return}const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=200;c.height=200;const ctx=c.getContext('2d');const sz=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-sz)/2,(img.height-sz)/2,sz,sz,0,0,200,200);this.avFile=c.toDataURL('image/jpeg',0.8);document.getElementById('edAvPv').innerHTML=`<img src="${this.avFile}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`};img.src=e.target.result};reader.readAsDataURL(f)},
 saveProfile(){
-  const name=document.getElementById('edName').value.trim();
-  const handle=document.getElementById('edHandle').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
-  const bio=document.getElementById('edBio').value.trim();
-  if(!handle||handle.length<3){this.toast('Nome único: mín 3 caracteres','error');return}
-
-  const us=D.users();const u=us.find(x=>x.id===this.user.id);
-  const canChange=!u.lastUsernameChange||Date.now()-u.lastUsernameChange>=DAYS30;
-
-  // Check username change
-  if(handle!==u.username){
-    if(!canChange){this.toast('Ainda não pode trocar o nome único','error');return}
-    if(us.find(x=>x.username===handle&&x.id!==u.id)){this.toast('Nome único já existe','error');return}
-    u.username=handle;
-    u.lastUsernameChange=Date.now();
-  }
-
-  u.displayName=name||handle;
-  u.bio=bio;
-
-  // Avatar
-  if(this.avType==='photo'&&this.avFile){
-    u.avatarType='image';u.avatarImg=this.avFile;u.avatarStatus='pending';
-    us.filter(x=>x.email===ADMIN_EMAIL).forEach(a=>{if(a.id!==u.id)this.addNot(a.id,'av_pend',u.id,null)});
-    this.toast('Foto enviada para moderação ⏳','info');
-  }else if(this.avType==='emoji'&&this.selAv){
-    u.avatarType='emoji';u.avatar=this.selAv;
-  }else if(this.avType==='default'){
-    u.avatarType='default';u.avatar=null;u.avatarImg=null;u.avatarStatus='none';
-  }
-
-  D.sU(us);this.refresh();this.closeM('edModal');this.renderProf();
-  this.toast('Perfil atualizado!','success');
-  // Update default avatar preview
-  document.getElementById('defAvPv')&&(document.getElementById('defAvPv').innerHTML=`<img src="${this.defAvatar(u.displayName||u.username)}" style="width:70px;height:70px;border-radius:50%">`);
+  const name=document.getElementById('edName').value.trim();const handle=document.getElementById('edHandle').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');const bio=document.getElementById('edBio').value.trim();
+  if(!handle||handle.length<3){this.toast('Nome único: mín 3','error');return}
+  const us=D.users();const u=us.find(x=>x.id===this.user.id);const canChange=!u.lastUsernameChange||Date.now()-u.lastUsernameChange>=DAYS30;
+  if(handle!==u.username){if(!canChange){this.toast('Ainda não pode trocar','error');return}if(us.find(x=>x.username===handle&&x.id!==u.id)){this.toast('Nome já existe','error');return}u.username=handle;u.lastUsernameChange=Date.now()}
+  u.displayName=name||handle;u.bio=bio;
+  if(this.avType==='photo'&&this.avFile){u.avatarType='image';u.avatarImg=this.avFile;u.avatarStatus='pending';us.filter(x=>x.email===ADMIN_EMAIL).forEach(a=>{if(a.id!==u.id)this.addNot(a.id,'av_pend',u.id,null)});this.toast('Foto para moderação ⏳','info')}
+  else if(this.avType==='emoji'&&this.selAv){u.avatarType='emoji';u.avatar=this.selAv}
+  else if(this.avType==='default'){u.avatarType='default';u.avatar=null;u.avatarImg=null;u.avatarStatus='none'}
+  D.sU(us);this.refresh();this.closeM('edModal');this.renderProf();this.toast('Perfil atualizado!','success');
 },
 
 // ---- ADMIN ----
 renderAdmin(){
   if(!this.isAdmin)return;
   const vs=D.vids();const us=D.users();
-  const pend=vs.filter(v=>v.status==='pending');
-  const appr=vs.filter(v=>v.status==='approved');
-  const rej=vs.filter(v=>v.status==='rejected');
+  const pend=vs.filter(v=>v.status==='pending');const appr=vs.filter(v=>v.status==='approved');const rej=vs.filter(v=>v.status==='rejected');
   const pendAv=us.filter(u=>u.avatarStatus==='pending');
+  const pendVerify=us.filter(u=>u.verifyStatus==='pending');
 
-  let h=`<div class="a-stats">
-    <div class="a-stat total"><div class="n">${vs.length}</div><div class="l">Total</div></div>
-    <div class="a-stat pending"><div class="n">${pend.length}</div><div class="l">Pendentes</div></div>
-    <div class="a-stat approved"><div class="n">${appr.length}</div><div class="l">Aprovados</div></div>
-    <div class="a-stat rejected"><div class="n">${rej.length}</div><div class="l">Rejeitados</div></div>
-  </div>`;
+  let h=`<div class="a-stats"><div class="a-stat total"><div class="n">${vs.length}</div><div class="l">Total Vídeos</div></div><div class="a-stat pending"><div class="n">${pend.length}</div><div class="l">Pendentes</div></div><div class="a-stat approved"><div class="n">${appr.length}</div><div class="l">Aprovados</div></div><div class="a-stat rejected"><div class="n">${rej.length}</div><div class="l">Rejeitados</div></div></div>`;
 
-  if(pendAv.length){
-    h+=`<div class="exp-sec"><h3><i class="fas fa-image"></i> Fotos Pendentes (${pendAv.length})</h3>`;
-    pendAv.forEach(u=>{
-      h+=`<div class="a-av-card"><div class="avp"><img src="${u.avatarImg}"></div><div class="avi"><div class="n">@${u.username}</div><div class="d">${u.displayName||''} • ${this.tA(u.createdAt)}</div></div><div class="ava"><button class="btn btn-ok btn-sm" onclick="V.approveAv('${u.id}')"><i class="fas fa-check"></i></button><button class="btn btn-no btn-sm" onclick="V.rejectAv('${u.id}')"><i class="fas fa-times"></i></button></div></div>`;
+  // VERIFY REQUESTS
+  if(pendVerify.length){
+    h+=`<div class="exp-sec"><h3><i class="fas fa-check-circle"></i> Verificações Pendentes (${pendVerify.length})</h3>`;
+    pendVerify.forEach(u=>{
+      h+=`<div class="a-vr-card"><div class="vra">${this.avHtml(u,45)}</div><div class="vri"><div class="n">@${u.username} ${u.displayName?`(${u.displayName})`:''}</div><div class="d">${u.followers.length} seg • ${D.vids().filter(v=>v.userId===u.id&&v.status==='approved').length} vídeos</div><div class="d" style="margin-top:3px;font-style:italic">"${this.esc(u.verifyReason||'')}"</div></div><div class="vra2"><button class="btn btn-ok btn-sm" onclick="V.approveVerify('${u.id}')"><i class="fas fa-check"></i></button><button class="btn btn-no btn-sm" onclick="V.rejectVerify('${u.id}')"><i class="fas fa-times"></i></button></div></div>`;
     });
     h+='</div>';
   }
 
-  h+=`<div class="a-tabs"><div class="a-tb active" onclick="V.aFilter('all',this)">Todos</div><div class="a-tb" onclick="V.aFilter('pending',this)">⏳ Pendentes (${pend.length})</div><div class="a-tb" onclick="V.aFilter('approved',this)">✅ Aprovados</div><div class="a-tb" onclick="V.aFilter('rejected',this)">❌ Rejeitados</div></div><div class="a-list" id="aList">`;
+  // AVATAR REQUESTS
+  if(pendAv.length){
+    h+=`<div class="exp-sec"><h3><i class="fas fa-image"></i> Fotos Pendentes (${pendAv.length})</h3>`;
+    pendAv.forEach(u=>{h+=`<div class="a-av-card"><div class="avp"><img src="${u.avatarImg}"></div><div class="avi"><div class="n">@${u.username}</div><div class="d">${this.tA(u.createdAt)}</div></div><div class="ava"><button class="btn btn-ok btn-sm" onclick="V.approveAv('${u.id}')"><i class="fas fa-check"></i></button><button class="btn btn-no btn-sm" onclick="V.rejectAv('${u.id}')"><i class="fas fa-times"></i></button></div></div>`});
+    h+='</div>';
+  }
 
-  const sorted=[...vs].sort((a,b)=>{if(a.status==='pending'&&b.status!=='pending')return-1;if(b.status==='pending'&&a.status!=='pending')return 1;return b.createdAt-a.createdAt});
+  // VIDEOS
+  h+=`<div class="a-tabs"><div class="a-tb active" onclick="V.aF('all',this)">Todos</div><div class="a-tb" onclick="V.aF('pending',this)">⏳ Pendentes (${pend.length})</div><div class="a-tb" onclick="V.aF('approved',this)">✅ Aprovados</div><div class="a-tb" onclick="V.aF('rejected',this)">❌ Rejeitados</div></div><div class="a-list" id="aList">`;
+
+  // Sort: verified users' pending videos first, then other pending, then rest
+  const sorted=[...vs].sort((a,b)=>{
+    if(a.status==='pending'&&b.status!=='pending')return-1;
+    if(b.status==='pending'&&a.status!=='pending')return 1;
+    if(a.status==='pending'&&b.status==='pending'){
+      const ua=us.find(x=>x.id===a.userId);const ub=us.find(x=>x.id===b.userId);
+      const va=ua&&ua.verified?1:0;const vb=ub&&ub.verified?1:0;
+      if(va!==vb)return vb-va; // Verified first
+    }
+    return b.createdAt-a.createdAt;
+  });
+
   sorted.forEach(v=>{
     const u=us.find(x=>x.id===v.userId);
     const sl=v.status==='pending'?'⏳ Pendente':v.status==='approved'?'✅ Aprovado':'❌ Rejeitado';
-    h+=`<div class="a-card" data-st="${v.status}"><div class="a-card-t"><div class="a-card-th"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div></div><div class="a-card-i"><div class="t">${v.title}</div><div class="u">@${u?u.username:'?'} ${u&&u.displayName?'('+u.displayName+')':''}</div><div class="d">${v.description||'Sem descrição'}</div><div class="m">${sl} • ${this.tA(v.createdAt)} • ❤ ${v.likes.length}</div></div></div>${v.status==='pending'?`<div class="a-card-a"><button class="btn btn-ok btn-sm" onclick="V.approveVid('${v.id}')"><i class="fas fa-check"></i> Aprovar</button><button class="btn btn-no btn-sm" onclick="V.rejectVid('${v.id}')"><i class="fas fa-times"></i> Rejeitar</button></div>`:''}</div>`;
+    const verifiedTag=u&&u.verified?'<i class="fas fa-check-circle verified"></i>':'';
+    const priorityTag=v.status==='pending'&&u&&u.verified?'<span style="font-size:.55rem;background:var(--blue);color:var(--bg);padding:1px 4px;border-radius:4px;font-weight:700;margin-left:4px">PRIORIDADE</span>':'';
+    h+=`<div class="a-card" data-st="${v.status}"><div class="a-card-t"><div class="a-card-th"><div class="bg ${v.isDemo?(v.gradClass||'g6'):'g6'}" style="display:flex;align-items:center;justify-content:center">${v.isDemo?(v.demoIcon||'🎬'):'🎬'}</div></div><div class="a-card-i"><div class="t">${v.title}</div><div class="u">@${u?u.username:'?'} ${verifiedTag}${priorityTag}</div><div class="d">${v.description||'Sem descrição'}</div><div class="m">${sl} • ${this.tA(v.createdAt)} • ❤ ${v.likes.length}</div></div></div>${v.status==='pending'?`<div class="a-card-a"><button class="btn btn-ok btn-sm" onclick="V.appVid('${v.id}')"><i class="fas fa-check"></i> Aprovar</button><button class="btn btn-no btn-sm" onclick="V.rejVid('${v.id}')"><i class="fas fa-times"></i> Rejeitar</button></div>`:''}</div>`;
   });
-  if(!sorted.length)h+=`<div style="text-align:center;padding:28px;color:var(--text3)"><i class="fas fa-inbox" style="font-size:2rem;margin-bottom:8px;display:block"></i>Nenhum vídeo</div>`;
+  if(!sorted.length)h+=`<div style="text-align:center;padding:28px;color:var(--text3)">Nenhum vídeo</div>`;
   h+='</div>';
   document.getElementById('admCont').innerHTML=h;
 },
 
-aFilter(st,btn){
-  document.querySelectorAll('.a-tb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  document.querySelectorAll('.a-card').forEach(c=>{c.style.display=st==='all'||c.dataset.st===st?'block':'none'});
+aF(st,btn){document.querySelectorAll('.a-tb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.a-card').forEach(c=>{c.style.display=st==='all'||c.dataset.st===st?'block':'none'})},
+appVid(vid){const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;v.status='approved';D.sV(vs);this.addNot(v.userId,'approved',this.user.id,vid);this.toast('Aprovado ✅','success');this.renderAdmin()},
+rejVid(vid){const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;v.status='rejected';D.sV(vs);this.addNot(v.userId,'rejected',this.user.id,vid);S.del(vid).catch(()=>{});this.toast('Rejeitado ❌','success');this.renderAdmin()},
+approveAv(uid){const us=D.users();const u=us.find(x=>x.id===uid);if(!u)return;u.avatarStatus='approved';D.sU(us);this.addNot(uid,'av_ok',this.user.id,null);this.toast('Foto aprovada ✅','success');this.renderAdmin()},
+rejectAv(uid){const us=D.users();const u=us.find(x=>x.id===uid);if(!u)return;u.avatarImg=null;u.avatarStatus='rejected';u.avatarType='default';D.sU(us);this.addNot(uid,'av_no',this.user.id,null);this.toast('Foto rejeitada','success');this.renderAdmin()},
+
+// Admin verify approve/reject
+approveVerify(uid){
+  const us=D.users();const u=us.find(x=>x.id===uid);if(!u)return;
+  u.verifyStatus='verified';u.verified=true;
+  D.sU(us);
+  this.addNot(uid,'verify_ok',this.user.id,null);
+  this.toast(`@${u.username} verificado ✅`,'success');this.renderAdmin();
 },
 
-approveVid(vid){const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;v.status='approved';D.sV(vs);this.addNot(v.userId,'approved',this.user.id,vid);this.toast('Aprovado ✅','success');this.renderAdmin()},
-rejectVid(vid){const vs=D.vids();const v=vs.find(x=>x.id===vid);if(!v)return;v.status='rejected';D.sV(vs);this.addNot(v.userId,'rejected',this.user.id,vid);S.del(vid).catch(()=>{});this.toast('Rejeitado ❌','success');this.renderAdmin()},
-approveAv(uid){const us=D.users();const u=us.find(x=>x.id===uid);if(!u)return;u.avatarStatus='approved';D.sU(us);this.addNot(uid,'av_ok',this.user.id,null);this.toast('Foto aprovada ✅','success');this.renderAdmin()},
-rejectAv(uid){const us=D.users();const u=us.find(x=>x.id===uid);if(!u)return;u.avatarImg=null;u.avatarStatus='rejected';u.avatarType='default';D.sU(us);this.addNot(uid,'av_no',this.user.id,null);this.toast('Foto rejeitada ❌','success');this.renderAdmin()},
+rejectVerify(uid){
+  const us=D.users();const u=us.find(x=>x.id===uid);if(!u)return;
+  u.verifyStatus='rejected';u.verified=false;
+  D.sU(us);
+  this.addNot(uid,'verify_no',this.user.id,null);
+  this.toast(`Verificação de @${u.username} negada`,'success');this.renderAdmin();
+},
 
 // ---- UTILS ----
 fN(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return''+n},
 tA(ts){const d=Date.now()-ts;const s=d/1000|0;if(s<60)return'agora';const m=s/60|0;if(m<60)return m+'min';const h=m/60|0;if(h<24)return h+'h';const dy=h/24|0;if(dy<30)return dy+'d';return(dy/30|0)+'mês'},
 esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML.replace(/\n/g,'<br>')},
-toast(msg,type='info'){const c=document.getElementById('toasts');const t=document.createElement('div');t.className=`toast ${type}`;const ic={success:'check-circle',error:'exclamation-circle',info:'info-circle'};t.innerHTML=`<i class="fas fa-${ic[type]||'info-circle'}" style="color:var(--${type==='success'?'green':type==='error'?'red':'blue'})"></i>${msg}`;c.appendChild(t);setTimeout(()=>t.remove(),3200)},
+toast(msg,type='info'){const c=document.getElementById('toasts');const t=document.createElement('div');t.className=`toast ${type}`;const ic={success:'check-circle',error:'exclamation-circle',info:'info-circle'};t.innerHTML=`<i class="fas fa-${ic[type]}" style="color:var(--${type==='success'?'green':type==='error'?'red':'blue'})"></i>${msg}`;c.appendChild(t);setTimeout(()=>t.remove(),3200)},
 
-// ---- EVENTS ----
 bind(){
-  // Auth tabs
-  document.querySelectorAll('.auth-tab').forEach(t=>{t.addEventListener('click',()=>{
-    document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
-    const l=t.dataset.t==='login';
-    document.getElementById('loginForm').style.display=l?'block':'none';
-    document.getElementById('regForm').style.display=l?'none':'block';
-  })});
-
-  document.getElementById('loginForm').addEventListener('submit',e=>{
-    e.preventDefault();
-    if(!this.login(document.getElementById('lUser').value.trim(),document.getElementById('lPass').value)){
-      const err=document.getElementById('lErr');err.textContent='Credenciais incorretas';err.style.display='block';
-    }
-  });
-
-  document.getElementById('regForm').addEventListener('submit',e=>{
-    e.preventDefault();
-    const pw=document.getElementById('rPass').value;
-    if(pw!==document.getElementById('rPassC').value){const err=document.getElementById('rErr');err.textContent='Senhas não coincidem';err.style.display='block';return}
-    const r=this.register(document.getElementById('rUser').value.trim(),document.getElementById('rName').value.trim(),document.getElementById('rEmail').value.trim(),pw);
-    if(r!==true){const err=document.getElementById('rErr');err.textContent=r;err.style.display='block'}
-  });
-
+  document.querySelectorAll('.auth-tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');const l=t.dataset.t==='login';document.getElementById('loginForm').style.display=l?'block':'none';document.getElementById('regForm').style.display=l?'none':'block'})});
+  document.getElementById('loginForm').addEventListener('submit',e=>{e.preventDefault();if(!this.login(document.getElementById('lUser').value.trim(),document.getElementById('lPass').value)){const err=document.getElementById('lErr');err.textContent='Credenciais incorretas';err.style.display='block'}});
+  document.getElementById('regForm').addEventListener('submit',e=>{e.preventDefault();const pw=document.getElementById('rPass').value;if(pw!==document.getElementById('rPassC').value){const err=document.getElementById('rErr');err.textContent='Senhas não coincidem';err.style.display='block';return}const r=this.register(document.getElementById('rUser').value.trim(),document.getElementById('rName').value.trim(),document.getElementById('rEmail').value.trim(),pw);if(r!==true){const err=document.getElementById('rErr');err.textContent=r;err.style.display='block'}});
   document.querySelectorAll('.ni').forEach(i=>{i.addEventListener('click',()=>{const p=i.dataset.p;if(p)this.nav(p)})});
-
   document.getElementById('upArea').addEventListener('click',()=>document.getElementById('vfInput').click());
   document.getElementById('vfInput').addEventListener('change',e=>this.handleFile(e.target.files[0]));
   document.getElementById('subVid').addEventListener('click',()=>this.submitVid());
   document.getElementById('tagArea').addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'&&e.key==='Enter'){e.preventDefault();this.addTag(e.target.value);e.target.value=''}});
   document.getElementById('cmtIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();this.submitCmt()}});
-
   let st;document.getElementById('searchIn').addEventListener('input',e=>{clearTimeout(st);st=setTimeout(()=>this.renderExp(e.target.value.trim()),300)});
-
-  document.getElementById('feedCont').addEventListener('click',e=>{
-    const ov=e.target.closest('.ppo');if(!ov)return;
-    const vid=ov.dataset.v;const now=Date.now();
-    if(now-this.lastTap<300){this.dblTap(vid);this.lastTap=0}
-    else{this.lastTap=now;const fi=ov.closest('.fi');const v=fi.querySelector('video');
-    if(v){if(v.paused){v.play();document.getElementById('pi_'+vid).classList.remove('show')}else{v.pause();document.getElementById('pi_'+vid).classList.add('show')}}}
-  });
-
-  const ua=document.getElementById('upArea');
-  ua.addEventListener('dragover',e=>{e.preventDefault();ua.style.borderColor='var(--blue)'});
-  ua.addEventListener('dragleave',()=>ua.style.borderColor='var(--bg5)');
-  ua.addEventListener('drop',e=>{e.preventDefault();ua.style.borderColor='var(--bg5)';if(e.dataTransfer.files.length)this.handleFile(e.dataTransfer.files[0])});
-
+  document.getElementById('feedCont').addEventListener('click',e=>{const ov=e.target.closest('.ppo');if(!ov)return;const vid=ov.dataset.v;const now=Date.now();if(now-this.lastTap<300){this.dblTap(vid);this.lastTap=0}else{this.lastTap=now;const fi=ov.closest('.fi');const v=fi.querySelector('video');if(v){if(v.paused){v.play();document.getElementById('pi_'+vid).classList.remove('show')}else{v.pause();document.getElementById('pi_'+vid).classList.add('show')}}}});
+  const ua=document.getElementById('upArea');ua.addEventListener('dragover',e=>{e.preventDefault();ua.style.borderColor='var(--blue)'});ua.addEventListener('dragleave',()=>ua.style.borderColor='var(--bg5)');ua.addEventListener('drop',e=>{e.preventDefault();ua.style.borderColor='var(--bg5)';if(e.dataTransfer.files.length)this.handleFile(e.dataTransfer.files[0])});
   document.getElementById('avUpBtn').addEventListener('click',()=>document.getElementById('avFileIn').click());
   document.getElementById('avFileIn').addEventListener('change',e=>{if(e.target.files[0])this.handleAvFile(e.target.files[0])});
-
-  // Update default avatar when name changes
-  document.getElementById('edName').addEventListener('input',e=>{
-    const pv=document.getElementById('defAvPv');
-    if(pv)pv.innerHTML=`<img src="${this.defAvatar(e.target.value||this.user.username)}" style="width:70px;height:70px;border-radius:50%">`;
-  });
+  document.getElementById('edName').addEventListener('input',e=>{const pv=document.getElementById('defAvPv');if(pv)pv.innerHTML=`<img src="${this.defAvatar(e.target.value||this.user.username)}" style="width:70px;height:70px;border-radius:50%">`});
 }
 };
-
 document.addEventListener('DOMContentLoaded',()=>V.init());
 </script>
 </body>
